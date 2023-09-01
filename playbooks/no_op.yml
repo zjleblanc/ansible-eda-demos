@@ -1,0 +1,10 @@
+---
+- name: No-op
+  hosts: localhost
+  become: false
+  gather_facts: false
+
+  tasks:
+    - name: Debug message
+      ansible.builtin.debug:
+        msg: "Running no-op playbook"

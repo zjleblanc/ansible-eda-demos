@@ -3,7 +3,7 @@
   hosts: localhost
 
   sources:
-    - cloin.servicenow.new_records:
+    - cloin.eda.snow_records:
         instance: "{{ SN_HOST }}"
         username: "{{ SN_USERNAME }}"
         password: "{{ SN_PASSWORD }}"
@@ -14,5 +14,6 @@
     - name: Debug
       condition: event.sys_id is defined
       action:
-        run_playbook:
-          name: no_op.yml
+        run_job_template:
+          name: Windows // No-Op
+          organization: Autodotes

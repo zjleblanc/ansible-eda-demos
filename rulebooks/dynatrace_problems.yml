@@ -1,0 +1,19 @@
+---
+- name: Listen for events on a webhook
+  hosts: localhost
+
+  sources:
+    - dynatrace.event_driven_ansible.dt_esa_api:
+        dt_api_host: "{{ DYNATRACE_HOST }}"
+        dt_api_token: "{{ DYNATRACE_API_TOKEN }}"
+        delay: 1
+
+  rules:
+    - name: Debug event source
+      condition:
+        all:
+          - event.status == "OPEN"
+      action:
+        run_job_template:
+          name: Windows // No-Op
+          organization: Autodotes

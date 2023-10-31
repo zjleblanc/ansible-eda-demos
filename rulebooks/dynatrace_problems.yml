@@ -1,5 +1,5 @@
 ---
-- name: Listen for events on a webhook
+- name: Poll Dynatrace Problems API
   hosts: localhost
 
   sources:
@@ -9,11 +9,13 @@
         delay: 1
 
   rules:
-    - name: Debug event source
+    - name: Launch Remediation Job Template
       condition:
         all:
           - event.status == "OPEN"
       action:
         run_job_template:
-          name: Windows // No-Op
+          name: EDA // Dynatrace Problems
           organization: Autodotes
+          job_args:
+            extra_vars: "{{ event.problemId }}"

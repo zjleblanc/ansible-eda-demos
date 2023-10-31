@@ -17,6 +17,3 @@
         run_job_template:
           name: EDA // Dynatrace Problems
           organization: Autodotes
-          job_args:
-            extra_vars:
-              problem_id: "{{ event.problemId }}"

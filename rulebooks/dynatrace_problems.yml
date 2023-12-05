@@ -1,6 +1,6 @@
 ---
 - name: Poll Dynatrace Problems API
-  hosts: localhost
+  hosts: all
 
   sources:
     - dynatrace.event_driven_ansible.dt_esa_api:

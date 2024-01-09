@@ -1,0 +1,15 @@
+# Zabbix Docs Reference: https://blog.zabbix.com/forward-zabbix-events-to-event-driven-ansible-and-automate-your-workflows/25893/
+---
+- name: Zabbix test rulebook
+  hosts: all
+  sources:
+    - ansible.eda.webhook:
+        host: 0.0.0.0
+        port: 5001
+  rules:
+    - name: Launch Demo Job
+      condition: event.payload is defined
+      action:
+        run_job_template:
+          name: Windows // No-Op
+          organization: Autodotes

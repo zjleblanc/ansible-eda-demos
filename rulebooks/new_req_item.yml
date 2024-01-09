@@ -9,6 +9,12 @@
         password: "{{ SN_PASSWORD }}"
         table: sc_req_item
         interval: 1
+    - cloin.eda.snow_records:
+        instance: "{{ SN_HOST }}"
+        username: "{{ SN_USERNAME }}"
+        password: "{{ SN_PASSWORD }}"
+        table: incident
+        interval: 1
 
   rules:
     - name: Launch Demo Job

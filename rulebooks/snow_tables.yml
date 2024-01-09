@@ -22,5 +22,5 @@
       condition: event.sys_id is defined
       action:
         run_job_template:
-          name: Windows // No-Op
+          name: EDA // No-Op
           organization: Autodotes

@@ -3,14 +3,18 @@
   hosts: all
 
   sources:
+    # New Relic Integration: create a webhook Destination in Alerts & AI
     - ansible.eda.webhook:
         host: 0.0.0.0
         port: 5004
 
   rules:
-    - name: Launch Demo Job
+    - name: Launch Remediation Job
       condition: event.payload is defined
       action:
         run_job_template:
-          name: EDA // No-Op
+          name: EDA // Windows // Resize EBS Volume
           organization: Autodotes
+          job_args:
+            extra_vars:
+              _host: "{{ event['payload']['impactedEntities'][0] }}"

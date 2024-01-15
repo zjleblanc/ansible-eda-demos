@@ -12,7 +12,7 @@
     - name: Launch Remediation Job
       condition: >-
         event.payload is defined and
-        event.payload.title is search('Limited free disk space')
+        event.payload.title is search('Windows Limited Free Disk Space')
       action:
         run_job_template:
           name: EDA // Windows // Resize EBS Volume

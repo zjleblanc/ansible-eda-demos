@@ -14,7 +14,7 @@
     - name: Launch Remediation Job
       condition: >-
         event.payload is defined and
-        event.payload.title is search('Windows Limited Free Disk Space')
+        event.payload.alertConditionNames[0] is search('Windows Limited Free Disk Space')
       action:
         run_job_template:
           name: EDA // Windows // Resize EBS Volume
@@ -26,7 +26,7 @@
     - name: Launch Debug Job
       condition: >-
         event.payload is defined and
-        event.payload.title is not search('Windows Limited Free Disk Space')
+        event.payload.alertConditionNames[0] is not search('Windows Limited Free Disk Space')
       action:
         run_job_template:
           name: EDA // No-Op

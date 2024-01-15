@@ -7,4 +7,4 @@
   tasks:
     - name: Debug message
       ansible.builtin.debug:
-        msg: "Running no-op playbook"
+        msg: "{{ ansible_eda }}"

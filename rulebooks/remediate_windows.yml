@@ -14,6 +14,7 @@
     - name: Launch Remediation Job
       condition: >-
         event.payload is defined and
+        event.payload.state == 'ACTIVATED' and
         event.payload.alertConditionNames[0] is search('Windows Limited Free Disk Space')
       action:
         run_job_template:
@@ -26,6 +27,7 @@
     - name: Launch Debug Job
       condition: >-
         event.payload is defined and
+        event.payload.state != 'ACTIVATED' and
         event.payload.alertConditionNames[0] is not search('Windows Limited Free Disk Space')
       action:
         run_job_template:

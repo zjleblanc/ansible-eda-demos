@@ -1,0 +1,16 @@
+---
+- name: Remediate windows box
+  hosts: all
+
+  sources:
+    - ansible.eda.webhook:
+        host: 0.0.0.0
+        port: 5004
+
+  rules:
+    - name: Launch Demo Job
+      condition: event.payload is defined
+      action:
+        run_job_template:
+          name: EDA // No-Op
+          organization: Autodotes

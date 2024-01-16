@@ -1,0 +1,32 @@
+{
+  "payload":
+  {
+    "id": "60a11c4d-dc07-4e54-aaae-ddc5a8de0e2d",
+    "state": "ACTIVATED",
+    "title": "Disk Free % < 20.0 for at least 1 minutes on 'windows-demo-2'",
+    "sources":
+    [
+      "newrelic"
+    ],
+    "trigger": "STATE_CHANGE",
+    "issueUrl": "https://radar-api.service.newrelic.com/accounts/4320189/issues/60a11c4d-dc07-4e54-aaae-ddc5a8de0e2d?notifier=WEBHOOK",
+    "priority": "HIGH",
+    "createdAt": 1705356753344,
+    "updatedAt": 1705356753344,
+    "isCorrelated": "false",
+    "workflowName": "Policy: 5038228 - Windows Baseline Policy",
+    "totalIncidents": "1",
+    "alertPolicyNames":
+    [
+      "Windows Baseline Policy"
+    ],
+    "impactedEntities":
+    [
+      "windows-demo-2"
+    ],
+    "alertConditionNames":
+    [
+      "Windows Limited Free Disk Space"
+    ]
+  }
+}

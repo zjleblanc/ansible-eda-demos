@@ -6,7 +6,7 @@
     - dynatrace.event_driven_ansible.dt_esa_api:
         dt_api_host: "{{ DYNATRACE_HOST }}"
         dt_api_token: "{{ DYNATRACE_API_TOKEN }}"
-        delay: 1
+        delay: 30
 
   rules:
     - name: Launch Remediation Job Template

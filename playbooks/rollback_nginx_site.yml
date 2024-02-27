@@ -1,0 +1,76 @@
+---
+- hosts: "{{ _hosts | default(omit) }}"
+  name: Update demo site
+  become: true
+
+  vars:
+    site_root: /var/www/html
+    site_tar_url: https://artifacts.autodotes.com/demo-site.tar.gz
+    manual_update_alert_min: 3
+
+  tasks:
+    - name: Clean destination directory
+      ansible.builtin.file:
+        name: "{{ site_root }}"
+        state: absent
+
+    - name: Unarchive a file that needs to be downloaded (added in 2.0)
+      ansible.builtin.unarchive:
+        src: "{{ site_tar_url }}"
+        dest: "{{ site_root | dirname }}"
+        remote_src: true
+        validate_certs: false
+
+    - name: Restart nginx
+      ansible.builtin.systemd_service:
+        name: nginx
+        state: restarted
+        enabled: true
+
+    - name: Get Host id
+      ansible.builtin.set_fact:
+        awx_host_details: "{{ lookup('ansible.controller.controller_api', 'hosts', query={'name': inventory_hostname, 'inventory_id': awx_inventory_id}, expect_one=true) }}" # noqa yaml[line-length]
+
+    - name: Get date
+      ansible.builtin.setup:
+        gather_subset:
+          - date_time
+
+    - name: Get Remediation Job Runs
+      ansible.builtin.set_fact:
+        awx_remediation_jobs: "{{ lookup('ansible.controller.controller_api', 'hosts/' + awx_host_details['id'] | string + '/job_host_summaries', query={'job__job_template_id': awx_job_template_id, 'created__regex': ansible_date_time.date}) }}" # noqa yaml[line-length]
+
+    - name: Determine remediation job runs today
+      ansible.builtin.set_fact:
+        awx_remediation_job_count: "{{ awx_remediation_jobs | regex_findall('processed') | length }}"
+
+    - name: Manage ServiceNow Incident
+      when: awx_remediation_job_count | int >= manual_update_alert_min
+      block:
+        - name: Check if ServiceNow Incident exists
+          delegate_to: localhost
+          register: r_incident_query
+          servicenow.itsm.incident_info:
+            query:
+              - description: ENDSWITH {{ ansible_date_time.date }}
+                short_description: = Demo Site Update Violation
+                caller: = admin
+
+        - name: Create ServiceNow Incident
+          when: r_incident_query.records | length == 0
+          delegate_to: localhost
+          servicenow.itsm.incident:
+            state: new
+            description: Too many attempts to manually update demo site - {{ awx_remediation_job_count }} today - {{ ansible_date_time.date }}
+            short_description: Demo Site Update Violation
+            caller: admin
+            urgency: medium
+            impact: high
+            other:
+              u_vm_name: "{{ inventory_hostname | default(omit) }}"
+
+        - name: Update ServiceNow Incident
+          when: r_incident_query.records | length > 0
+          delegate_to: localhost
+          ansible.builtin.debug:
+            msg: "TODO: implement update"

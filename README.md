@@ -1,2 +1,3 @@
-# ansible-eda-snow
-Service Now Event-Driven Ansible Demos
+# ansible-eda-demos
+
+Event-Driven Ansible Demos

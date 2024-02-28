@@ -16,5 +16,5 @@
           - event.status == "OPEN"
       action:
         run_job_template:
-          name: EDA // No-Op
+          name: EDA // Dynatrace Problems
           organization: Autodotes

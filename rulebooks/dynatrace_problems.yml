@@ -9,7 +9,22 @@
         delay: 30
 
   rules:
-    - name: Launch Remediation Job Template
+    # Commands to generate mock disk consumption
+    # (linux)    fallocate -l 4G dummy.img
+    # (windows)  $file = [System.IO.File]::Create("C:\users\ec2-user\dummylarge.txt"); $file.SetLength(10GB); $file.Close();
+    - name: Launch Free Disk Space Remediation
+      condition: >-
+        event.payload is defined and
+        event.payload.title == 'Free Disk Space Below 30%'
+      action:
+        run_job_template:
+          name: EDA // Resize EBS Volume
+          organization: Autodotes
+          job_args:
+            extra_vars:
+              _host: "{{ event['payload']['impactedEntities'][0]['name'] }}"
+
+    - name: Launch Generic Remediation Fact Gathering
       # Crawl, walk, run - hone in on specific problem types using conditions
       condition:
         all:

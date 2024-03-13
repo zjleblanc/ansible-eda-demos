@@ -1,7 +1,7 @@
 # powershell to create big file
 # $file = [System.IO.File]::Create("C:\users\ec2-user\dummylarge.txt"); $file.SetLength(10GB); $file.Close();
 ---
-- name: Remediate windows box
+- name: Remediate disk usage problems (New Relic)
   hosts: all
 
   sources:
@@ -18,7 +18,7 @@
         event.payload.alertConditionNames[0] is search('Windows Limited Free Disk Space')
       action:
         run_job_template:
-          name: EDA // Windows // Resize EBS Volume
+          name: EDA // Resize EBS Volume
           organization: Autodotes
           job_args:
             extra_vars:
@@ -27,8 +27,7 @@
     - name: Launch Debug Job
       condition: >-
         event.payload is defined and
-        event.payload.trigger != 'USER_ACTION' and
-        event.payload.alertConditionNames[0] is not search('Windows Limited Free Disk Space')
+        event.payload.trigger != 'USER_ACTION'
       action:
         run_job_template:
           name: EDA // No-Op

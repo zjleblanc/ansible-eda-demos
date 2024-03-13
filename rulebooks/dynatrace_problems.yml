@@ -15,14 +15,15 @@
     - name: Launch Free Disk Space Remediation
       condition: >-
         event.payload is defined and
-        event.payload.title == 'Free Disk Space Below 30%'
+        event.status == "OPEN" and
+        event.title == 'Free Disk Space Below 30%'
       action:
         run_job_template:
           name: EDA // Resize EBS Volume
           organization: Autodotes
           job_args:
             extra_vars:
-              _host: "{{ event['payload']['impactedEntities'][0]['name'] }}"
+              _host: "{{ event['impactedEntities'][0]['name'] }}"
 
     - name: Launch Generic Remediation Fact Gathering
       # Crawl, walk, run - hone in on specific problem types using conditions

@@ -23,6 +23,7 @@
           job_args:
             extra_vars:
               _host: "{{ event['impactedEntities'][0]['name'] }}"
+              _aws_region: "us-east-2"
 
     - name: Launch Generic Remediation Fact Gathering
       # Crawl, walk, run - hone in on specific problem types using conditions

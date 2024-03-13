@@ -14,7 +14,6 @@
     # (windows)  $file = [System.IO.File]::Create("C:\users\ec2-user\dummylarge.txt"); $file.SetLength(10GB); $file.Close();
     - name: Launch Free Disk Space Remediation
       condition: >-
-        event.payload is defined and
         event.status == "OPEN" and
         event.title == 'Free Disk Space Below 30%'
       action:

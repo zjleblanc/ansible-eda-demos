@@ -1,0 +1,13 @@
+---
+- hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - setup:
+
+    - debug:
+       var: ansible_system
+
+    - debug:
+        msg: "hello"
+      when: ansible_distribution | lower == 'macosx'

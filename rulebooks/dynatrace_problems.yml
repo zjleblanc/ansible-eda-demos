@@ -17,13 +17,24 @@
         event.status == "OPEN" and
         event.title == 'Free Disk Space Below 30%'
       action:
-        run_job_template:
-          name: EDA // Resize EBS Volume
+        run_workflow_template:
+          name: EDA // Remediation Workflow // Disk Space
           organization: Autodotes
           job_args:
             extra_vars:
               _host: "{{ event['impactedEntities'][0]['name'] }}"
               _aws_region: "us-east-2"
+              inc_short_description: "{{ event['title'] }} [{{ event['impactedEntities'][0]['name'] }}]"
+              inc_description: "Auto-generated event by Ansible for Dynatrace problem {{ event['problemId'] }}"
+              inc_other:
+                # problem_view: ui/apps/dynatrace.classic.problems/#problems/problemdetails;gtf=-6h;gf=all;
+                comments: >
+                  [code] <p>Impacted: {{ event['impactLevel'] }}</p> <p>Type: {{ event['severityLevel'] }}</p> <p>
+                    <a href="{{ DYNATRACE_HOST | replace('live', 'apps') }}/{{ DYNATRACE_PROBLEM_VIEW }}pid={{ event['problemId'] }}">
+                      View Problem Details
+                    </a>
+                  </p> [/code]
+
 
     - name: Launch Generic Remediation Fact Gathering
       # Crawl, walk, run - hone in on specific problem types using conditions

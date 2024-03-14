@@ -45,7 +45,7 @@
       register: r_incident
       servicenow.itsm.incident:
         state: new
-        caller: admin
+        caller: zleblanc
         short_description: "{{ ansible_eda.event['title'] }}"
         description: Ansible EDA generated event based on Dynatrace Problems API
         impact: low

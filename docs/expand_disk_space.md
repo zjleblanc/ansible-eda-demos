@@ -132,7 +132,7 @@ You will need to setup a rulebook activation to run your rulebook and listen for
 
 Variables example:
 ```yaml
-DYNATRACE_HOST: https://<instance>.apps.dynatrace.com
+DYNATRACE_HOST: https://<instance>.live.dynatrace.com
 DYNATRACE_API_TOKEN: dt0c01...
 DYNATRACE_PROBLEM_VIEW: ui/apps/dynatrace.classic.problems/#problems/problemdetails;gtf=yesterday;gf=all;
 ```

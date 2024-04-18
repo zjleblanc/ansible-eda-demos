@@ -23,7 +23,9 @@ Dynatrace is an agent-based solution. For this demo, I leverage a launch templat
 AWS Housekeeping
 -  Create an AWS keypair for the machine you will use to conduct this demo. To simulate a "full disk", you will want to be able to quickly SSH and run a command. 
 -  Create a VPC with a public subnet - keep the architecture simple
--  Ensure the Security Group associated with your public subnet allows SSH traffic (TCP/22)
+-  Ensure the Security Group associated with your public subnet allows
+   -  SSH traffic (TCP/22)
+   -  HTTPS traffic (TCP/443)
 
 Now you can navigate to EC2 -> Instances -> Launch Templates -> Create Launch Template
 
@@ -41,7 +43,14 @@ Below are the options to set in the Launch Template form
 | Resource tags | _Optional tags to apply to demo vms_ | |
 | Advanced details > Metadata accessible | Enable | Required for userdata script |
 | Advanced details > Allow tags in metadata | Enable | Required for userdata script |
-| Advanced details > User data | Paste [script](.attachments/dt_oneagent_userdata.sh) and replace tokens | `{{ DT_HOST }}` `{{ DT_API_TOKEN }}` |
+| Advanced details > User data | Paste [script](.attachments/dt_oneagent_userdata.sh) and replace tokens | _See examples below_ |
+
+```yaml
+# Example token values:
+# make sure to use the "live" subdomain, not "apps"
+DT_HOST: <instance>.live.dynatrace.com
+DT_API_TOKEN: dt0c01...
+```
 
 Now you can **Create the Launch Template**
 

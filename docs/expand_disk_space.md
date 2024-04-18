@@ -211,7 +211,7 @@ The workflow has four nodes:
 | --- | --- | --- | --- | --- |
 | 1 | Cloud Management | Project Sync | _Repo contains all listed below_ | _SCM Credential if private_ |
 | 2 | Create Incident | Job Template | [create_incident.yml](https://github.com/zjleblanc/ansible-cloud-mgmt/blob/master/playbooks/snow/create_incident.yml) | `Service Now Credential` |
-| 3 | Resize EBS Volume | Job Template | [add_disk_space.yml](https://github.com/zjleblanc/ansible-cloud-mgmt/blob/master/playbooks/aws/add_disk_space.yml) | `Service Now Credential` `AWS Credential` `Machine Credential` |
+| 3 | Resize EBS Volume | Job Template | [add_disk_space.yml](https://github.com/zjleblanc/ansible-cloud-mgmt/blob/master/playbooks/aws/add_disk_space.yml) | `Service Now Credential` `AWS Credential`<br>`Machine Credential` |
 | 4 | Update Incident | Job Template | [update_incident.yml](https://github.com/zjleblanc/ansible-cloud-mgmt/blob/master/playbooks/snow/update_incident.yml) | `Service Now Credential` |
 
 The name of the workflow can be customized, but you must update the rulebook to reflect the change. The `run_workflow_template` action `name` parameter will determine what workflow template is launched when the conditions are met.

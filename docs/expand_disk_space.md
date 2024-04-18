@@ -209,7 +209,7 @@ compose:
 The workflow has four nodes:
 | | Node | Type | Playbook | Credentials |
 | --- | --- | --- | --- | --- |
-| 1 | Cloud Management | Project Sync | _N/A_ | _N/A_ |
+| 1 | Cloud Management | Project Sync | _Repo contains all listed below_ | _SCM Credential if private_ |
 | 2 | Create Incident | Job Template | [create_incident.yml](https://github.com/zjleblanc/ansible-cloud-mgmt/blob/master/playbooks/snow/create_incident.yml) | `Service Now Credential` |
 | 3 | Resize EBS Volume | Job Template | [add_disk_space.yml](https://github.com/zjleblanc/ansible-cloud-mgmt/blob/master/playbooks/aws/add_disk_space.yml) | `Service Now Credential` `AWS Credential` `Machine Credential` |
 | 4 | Update Incident | Job Template | [update_incident.yml](https://github.com/zjleblanc/ansible-cloud-mgmt/blob/master/playbooks/snow/update_incident.yml) | `Service Now Credential` |

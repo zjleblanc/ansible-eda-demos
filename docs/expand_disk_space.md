@@ -190,11 +190,15 @@ Source variables example:
 ---
 aws_region: us-east-1
 hostnames:
+  # important for this demo:
+  # it will match the limit passed from the rulebook via {{ _host }}
   - tag:Name
 keyed_groups:
   - prefix: platform
     key: platform
 compose:
+  # important for this demo:
+  # it will leverage the public ip for ssh instead of the hostname
   ansible_host: public_ip_address
 ```
 

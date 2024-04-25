@@ -1,0 +1,105 @@
+---
+- name: Remediate OneAgent monitoring
+  hosts: localhost
+  gather_facts: false
+  tags: oneagent
+
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+
+  environment:
+    AWS_REGION: "{{ _aws_region | default('us-east-1') }}"
+
+  tasks:
+    - name: Update state of incident
+      when: incident_sys_id is defined
+      tags: snow
+      servicenow.itsm.incident:
+        sys_id: "{{ incident_sys_id }}"
+        state: in_progress
+
+    - name: Gather information about a particular instance using ID
+      register: r_instance_info
+      amazon.aws.ec2_instance_info:
+        filters:
+          tag:Name: "{{ _host }}"
+          instance-state-name: ["running"]
+
+    - name: Gather facts
+      delegate_to: "{{ _host }}"
+      ansible.builtin.setup:
+
+    - name: Attach files to incident
+      ansible.builtin.include_tasks:
+        file: tasks/sn_add_attachments.yml
+      vars:
+        sn_sys_id: "{{ incident_sys_id }}"
+        sn_attachment_files:
+          - path: /tmp/ansible_facts.json
+            data: "{{ ansible_facts | to_nice_json }}"
+          - path: /tmp/instance_info.json
+            data: "{{ r_instance_info['instances'][0] | to_nice_json }}"
+
+    - name: Grab journal logs
+      delegate_to: "{{ _host }}"
+      register: r_journal
+      ansible.builtin.command: journalctl -u oneagent
+
+    - name: Post logs to incident
+      ansible.builtin.include_tasks:
+        file: tasks/sn_comment.yml
+      vars:
+        sn_sys_id: "{{ incident_sys_id }}"
+        sn_resource: incident
+        sn_comment: "{{ r_journal.stdout }}"
+
+    - name: Restart ec2
+      amazon.aws.ec2_instance:
+        instance_ids:
+          - "{{ r_instance_info['instances'][0]['instance_id'] }}"
+        state: restarted
+        wait: true
+        wait_timeout: 500
+
+    - name: Get ec2 instance info after reboot
+      register: r_post_reboot_info
+      amazon.aws.ec2_instance_info:
+        filters:
+          tag:Name: "{{ _host }}"
+          instance-state-name: ["running"]
+
+    - name: Add host with updated IP
+      ansible.builtin.add_host:
+        name: ec2_post_reboot
+        ansible_host: "{{ (r_post_reboot_info | default(r_instance_info))['instances'][0]['public_ip_address'] }}"
+
+- name: Expand the filesystem
+  hosts: ec2_post_reboot
+  gather_facts: false
+
+  tasks:
+    - name: Wait for system to become reachable
+      ansible.builtin.wait_for_connection:
+        timeout: "{{ reboot_timeout | default(300) }}"
+
+    - name: Gather facts
+      ansible.builtin.service_facts:
+
+    - name: Add facts to incident
+      when: incident_sys_id is defined
+      tags: snow
+      block:
+        - name: Post service facts to incident
+          ansible.builtin.include_tasks:
+            file: tasks/sn_comment.yml
+          vars:
+            sn_sys_id: "{{ incident_sys_id }}"
+            sn_resource: incident
+            sn_comment: "{{ ansible_facts.service_facts['oneagent'] }}"
+
+        - name: Set state to closed
+          when: (ansible_facts.service_facts['oneagent']['state'] == 'running') | default(false)
+          ansible.builtin.set_stats:
+            data:
+              incident_state: closed
+              close_notes: Dynatrace + Event-Driven Ansible auto-remediation successful

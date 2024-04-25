@@ -1,0 +1,18 @@
+---
+- name: Add facts to incident
+  when: sn_sys_id is defined
+  tags: snow
+  block:
+    - name: Create attachments
+      delegate_to: localhost
+      loop: "{{ sn_attachment_files }}"
+      ansible.builtin.copy:
+        content: "{{ item.data }}"
+        dest: "{{ item.path }}"
+        mode: 0755
+
+    - name: Add facts to incident
+      delegate_to: localhost
+      servicenow.itsm.incident:
+        sys_id: "{{ sn_sys_id }}"
+        attachments: "{{ sn_attachment_files | json_query('[].{path: path}') }}"

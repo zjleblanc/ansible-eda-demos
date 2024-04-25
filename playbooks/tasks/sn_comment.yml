@@ -1,0 +1,10 @@
+---
+- name: "Add comment | {{ sn_resource }}:{{ sn_sys_id }}"
+  delegate_to: localhost
+  tags: comment
+  servicenow.itsm.api:
+    resource: "{{ sn_resource | default('sc_req_item') }}"
+    sys_id: "{{ sys_id }}"
+    action: patch
+    data:
+      comments: "{{ sn_comment }}"

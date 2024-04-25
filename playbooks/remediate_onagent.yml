@@ -95,7 +95,7 @@
           vars:
             sn_sys_id: "{{ incident_sys_id }}"
             sn_resource: incident
-            sn_comment: "{{ ansible_facts.service_facts['oneagent'] }}"
+            sn_comment: "{{ ansible_facts.services['oneagent.service'] | default('oneagent.service not found on ' + _host) }}"
 
         - name: Set state to closed
           when: (ansible_facts.service_facts['oneagent']['state'] == 'running') | default(false)

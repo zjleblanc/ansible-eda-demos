@@ -98,7 +98,7 @@
             sn_comment: "{{ ansible_facts.services['oneagent.service'] | default('oneagent.service not found on ' + _host) }}"
 
         - name: Set state to closed
-          when: (ansible_facts.service_facts['oneagent']['state'] == 'running') | default(false)
+          when: (ansible_facts.services['oneagent.service']['state'] == 'running') | default(false)
           ansible.builtin.set_stats:
             data:
               incident_state: closed

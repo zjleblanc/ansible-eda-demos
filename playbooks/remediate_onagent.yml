@@ -77,6 +77,10 @@
   hosts: ec2_post_reboot
   gather_facts: false
 
+  vars:
+    default_comment:
+      message: "oneagent.service not found on {{ _host }}"
+
   tasks:
     - name: Wait for system to become reachable
       ansible.builtin.wait_for_connection:
@@ -95,7 +99,7 @@
           vars:
             sn_sys_id: "{{ incident_sys_id }}"
             sn_resource: incident
-            sn_comment: "{{ ansible_facts.services['oneagent.service'] | default('oneagent.service not found on ' + _host) }}"
+            sn_comment: "{{ ansible_facts.services['oneagent.service'] | default(default_comment) | to_nice_json }}"
 
         - name: Set state to closed
           when: (ansible_facts.services['oneagent.service']['state'] == 'running') | default(false)

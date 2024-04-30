@@ -1,0 +1,14 @@
+---
+- name: Kill process # noqa no-changed-when
+  ansible.builtin.command: "kill {{ pid }}"
+
+- name: Wait for process to be killed
+  register: r_proc_kill
+  ignore_errors: true
+  ansible.builtin.wait_for:
+    path: "/proc/{{ pid }}/status"
+    state: absent
+
+- name: Force kill stuck process # noqa no-changed-when
+  when: r_proc_kill is failed
+  ansible.builtin.command: "kill -9 {{ pid }}"

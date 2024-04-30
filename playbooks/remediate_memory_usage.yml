@@ -1,0 +1,38 @@
+---
+- hosts: "{{ _hosts | default(omit) }}"
+  name: Remediate high memory utilization
+  become: true
+  gather_facts: false
+
+  vars:
+    # unit %
+    threshold: 1 
+    # match to beginning of command
+    kill_allowlist:
+      - tail
+      - cat
+      - less
+
+  tasks:
+    - name: Run top # noqa no-changed-when
+      register: r_top_raw
+      ansible.builtin.command: top -w 512 -b -o %MEM -n1
+
+    - name: Parse top output
+      ansible.builtin.set_fact:
+        top_data: "{{ r_top_raw.stdout_lines | parse_top }}"
+
+    - name: "Isolate processes using high memory | threshold={{ threshold }}"
+      ansible.builtin.set_fact:
+        procs_high_mem: "{{ top_data.tasks | num_gt('%MEM', threshold) }}"
+
+    - name: Kill processes
+      when: proc['COMMAND'].lower() in kill_allowlist
+      loop: "{{ procs_high_mem }}"
+      loop_control:
+        loop_var: proc
+        label: "[{{ proc['PID'] }}] {{ proc['COMMAND'] }}"
+      ansible.builtin.include_tasks:
+        file: tasks/proc_kill_and_wait.yml
+      vars:
+        pid: "{{ proc['PID'] }}"

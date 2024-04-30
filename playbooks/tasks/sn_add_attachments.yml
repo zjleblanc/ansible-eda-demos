@@ -9,7 +9,7 @@
       ansible.builtin.copy:
         content: "{{ item.data }}"
         dest: "{{ item.path }}"
-        mode: 0755
+        mode: 0755 # noqa yaml[octal-values]
 
     - name: Add facts to incident
       delegate_to: localhost

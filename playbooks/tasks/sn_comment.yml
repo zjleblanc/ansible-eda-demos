@@ -1,5 +1,5 @@
 ---
-- name: "Add comment | {{ sn_resource }}:{{ sn_sys_id }}"
+- name: "Add comment | {{ sn_resource }}:{{ sn_sys_id }}" # noqa name[template]
   delegate_to: localhost
   tags: comment
   servicenow.itsm.api:

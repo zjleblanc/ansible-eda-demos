@@ -61,7 +61,7 @@
     - name: Launch High Memory Usage Remediation
       condition: >-
         event.status == "OPEN" and
-        event.title.startswith("The memory usage has spiked")
+        event.title is match "The memory usage has spiked"
       action:
         run_workflow_template:
           name: EDA // Remediation Workflow // High Memory Usage

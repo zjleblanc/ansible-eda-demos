@@ -1,5 +1,5 @@
 ---
-- name: "Update state | {{ sn_resource }}:{{ sn_sys_id }}"
+- name: "Update state | {{ sn_resource }}:{{ sn_sys_id }}" # noqa name[template]
   delegate_to: localhost
   servicenow.itsm.api:
     resource: "{{ sn_resource | default('incident') }}"

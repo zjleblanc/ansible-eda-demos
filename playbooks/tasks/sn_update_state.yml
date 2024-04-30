@@ -1,0 +1,9 @@
+---
+- name: "Update state | {{ sn_resource }}:{{ sn_sys_id }}"
+  delegate_to: localhost
+  servicenow.itsm.api:
+    resource: "{{ sn_resource | default('incident') }}"
+    sys_id: "{{ sn_sys_id }}"
+    action: patch
+    data:
+      state: "{{ sn_new_state }}"

@@ -1,12 +1,12 @@
 ---
-- hosts: "{{ _hosts | default(omit) }}"
+- hosts: "{{ _host | default(omit) }}"
   name: Remediate high memory utilization
   become: true
   gather_facts: false
 
   vars:
     # unit %
-    threshold: 1 
+    threshold: 1
     # match to beginning of command
     kill_allowlist:
       - tail
@@ -14,6 +14,15 @@
       - less
 
   tasks:
+    - name: Update state of incident
+      when: incident_sys_id is defined
+      ansible.builtin.include_tasks:
+        file: tasks/sn_update_state.yml
+      vars:
+        sn_sys_id: "{{ incident_sys_id }}"
+        sn_resource: incident
+        sn_new_state: in_progress
+
     - name: Run top # noqa no-changed-when
       register: r_top_raw
       ansible.builtin.command: top -w 512 -b -o %MEM -n1
@@ -22,9 +31,28 @@
       ansible.builtin.set_fact:
         top_data: "{{ r_top_raw.stdout_lines | parse_top }}"
 
+    - name: Post top to incident
+      when: incident_sys_id is defined
+      ansible.builtin.include_tasks:
+        file: tasks/sn_add_attachments.yml
+      vars:
+        sn_sys_id: "{{ incident_sys_id }}"
+        sn_attachment_files:
+          - path: "/tmp/{{ _host }}_top.json"
+            data: "{{ top_data | to_nice_json }}"
+
     - name: "Isolate processes using high memory | threshold={{ threshold }}"
       ansible.builtin.set_fact:
         procs_high_mem: "{{ top_data.tasks | num_gt('%MEM', threshold) }}"
+
+    - name: Post high memory processes to incident
+      when: incident_sys_id is defined
+      ansible.builtin.include_tasks:
+        file: tasks/sn_comment.yml
+      vars:
+        sn_sys_id: "{{ incident_sys_id }}"
+        sn_resource: incident
+        sn_comment: "{{ procs_high_mem | to_nice_json }}"
 
     - name: Kill processes
       when: proc['COMMAND'].lower() in kill_allowlist
@@ -36,3 +64,9 @@
         file: tasks/proc_kill_and_wait.yml
       vars:
         pid: "{{ proc['PID'] }}"
+
+    - name: Set state to closed
+      ansible.builtin.set_stats:
+        data:
+          incident_state: closed
+          close_notes: Dynatrace + Event-Driven Ansible auto-remediation successful

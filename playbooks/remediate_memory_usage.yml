@@ -52,7 +52,7 @@
       vars:
         sn_sys_id: "{{ incident_sys_id }}"
         sn_resource: incident
-        sn_comment: "{{ procs_high_mem | to_nice_json }}"
+        sn_comment: "{{ procs_high_mem | to_nice_json(indent=2) }}"
 
     - name: Kill processes
       when: proc['COMMAND'].lower() in kill_allowlist

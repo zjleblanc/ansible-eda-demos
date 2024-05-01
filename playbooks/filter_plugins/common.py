@@ -8,7 +8,7 @@ class FilterModule(object):
         }
 
     def do_codify(self, content, endline='\n'):
-        return '[code]<pre>' + content.replace(endline,'<br>') + '</pre>[/code]'
+        return '[code]<pre>' + content.replace(endline,'<br>').replace(' ','&nbsp;') + '</pre>[/code]'
     
     def do_num_gt(self, tasks: list, key: str, threshold: float) -> list:
         return list(filter(lambda t: float(t[key]) > threshold, tasks))

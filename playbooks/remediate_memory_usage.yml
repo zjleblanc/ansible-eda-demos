@@ -46,13 +46,15 @@
         procs_high_mem: "{{ top_data.tasks | num_gt('%MEM', threshold) }}"
 
     - name: Post high memory processes to incident
-      when: incident_sys_id is defined
+      when:
+        - incident_sys_id is defined
+        - procs_high_mem | length > 0
       ansible.builtin.include_tasks:
         file: tasks/sn_comment.yml
       vars:
         sn_sys_id: "{{ incident_sys_id }}"
         sn_resource: incident
-        sn_comment: "{{ procs_high_mem | to_nice_json(indent=2) }}"
+        sn_comment: "{{ procs_high_mem | to_nice_json(indent=2) | codify }}"
 
     - name: Kill processes
       when: proc['COMMAND'].lower() in kill_allowlist

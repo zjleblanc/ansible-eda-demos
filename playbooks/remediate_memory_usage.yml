@@ -23,13 +23,28 @@
         sn_resource: incident
         sn_new_state: in_progress
 
+    - name: Ensure packages present
+      ansible.builtin.package:
+        name:
+          - top
+          - lsof
+        state: present
+
+    - name: Run lsof # noqa no-changed-when
+      register: r_lsof_raw
+      ansible.builtin.command: lsof -F
+
+    - name: Parse lsof output
+      ansible.builtin.set_fact:
+        lsof_data: "{{ r_lsof_raw.stdout_lines | parse_lsof }}"
+
     - name: Run top # noqa no-changed-when
       register: r_top_raw
       ansible.builtin.command: top -w 512 -b -o %MEM -n1
 
     - name: Parse top output
       ansible.builtin.set_fact:
-        top_data: "{{ r_top_raw.stdout_lines | parse_top }}"
+        top_data: "{{ r_top_raw.stdout_lines | zjleblanc.utils.top_parse }}"
 
     - name: Post top to incident
       when: incident_sys_id is defined

@@ -69,83 +69,123 @@ class FilterModule(object):
     
     @staticmethod
     def __parse_lsof_records(lines: list) -> dict:
-        parsed = {}
-        pid = 'ERR'
+        parsed = []
+        process = None
+        file = None
         for line in lines:
             if line[0] == 'p':
                 pid = line[1:]
-                parsed[pid] = {"pid": pid}
+                process = { "pid": int(pid) }
+                file = None
                 continue
             if line[0] == 'f':
-                parsed[pid]['file_descriptor'] = line[1:]
+                if file:
+                    parsed.append(file)
+                file = { "file_descriptor": line[1:] }
+                file.update(process)
                 continue
             if line[0] == 'a':
-                parsed[pid]['access_mode'] = line[1:]
+                if file:
+                    file['access_mode'] = line[1:]
+                    continue
+                process['access_mode'] = line[1:]
                 continue
             if line[0] == 'c':
-                parsed[pid]['command_name'] = line[1:]
+                process['command_name'] = line[1:]
                 continue
             if line[0] == 'C':
-                parsed[pid]['file_struct_share_count'] = line[1:]
+                if file:
+                    file['file_struct_share_count'] = line[1:]
                 continue
             if line[0] == 'd':
-                parsed[pid]['file_device_character_code'] = line[1:]
+                if file:
+                    file['file_device_character_code'] = line[1:]
                 continue
             if line[0] == 'D':
-                parsed[pid]['file_device_num'] = line[1:]
+                if file:
+                    file['file_device_num'] = line[1:]
                 continue
             if line[0] == 'F':
-                parsed[pid]['file_struct_addr'] = line[1:]
+                if file:
+                    file['file_struct_addr'] = line[1:]
                 continue
             if line[0] == 'G':
-                parsed[pid]['file_flags'] = line[1:]
+                if file:
+                    file['file_flags'] = line[1:]
                 continue
             if line[0] == 'i':
-                parsed[pid]['file_inode_num'] = line[1:]
+                if file:
+                    file['file_inode_num'] = int(line[1:])
                 continue
             if line[0] == 'k':
-                parsed[pid]['file_link_count'] = line[1:]
+                if file:
+                    file['file_link_count'] = int(line[1:])
                 continue
             if line[0] == 'l':
-                parsed[pid]['file_lock_status'] = line[1:]
+                if file:
+                    file['file_lock_status'] = line[1:]
                 continue
             if line[0] == 'L':
-                parsed[pid]['proc_login_name'] = line[1:]
+                if file:
+                    file['proc_login_name'] = line[1:]
+                    continue
+                process['proc_login_name'] = line[1:]
                 continue
             if line[0] == 'n':
-                parsed[pid]['file_name_comment_addr'] = line[1:]
+                if file:
+                    file['file_name'] = line[1:]
                 continue
             if line[0] == 'N':
-                parsed[pid]['node_identifier'] = line[1:]
+                if file:
+                    file['node_identifier'] = line[1:]
+                    continue
+                process['node_identifier'] = line[1:]
                 continue
             if line[0] == 'o':
-                parsed[pid]['file_offset'] = line[1:]
+                if file:
+                    file['file_offset'] = line[1:]
                 continue
             if line[0] == 'g':
-                parsed[pid]['proc_group_id'] = line[1:]
+                process['proc_group_id'] = int(line[1:])
                 continue
             if line[0] == 'P':
-                parsed[pid]['protocol_name'] = line[1:]
+                if file:
+                    file['protocol_name'] = line[1:]
+                    continue
+                process['protocol_name'] = line[1:]
                 continue
             if line[0] == 'r':
-                parsed[pid]['raw_device_number'] = line[1:]
+                if file:
+                    file['raw_device_number'] = line[1:]
+                    continue
+                process['raw_device_number'] = line[1:]
                 continue
             if line[0] == 'R':
-                parsed[pid]['proc_parent_pid'] = line[1:]
+                process['proc_parent_pid'] = int(line[1:])
                 continue
             if line[0] == 's':
-                parsed[pid]['file_size'] = line[1:]
+                if file:
+                    file['file_size'] = int(line[1:])
                 continue
             if line[0] == 'S':
-                parsed[pid]['file_stream_id'] = line[1:]
+                if file:
+                    file['file_stream_id'] = line[1:]
                 continue
             if line[0] == 't':
-                parsed[pid]['file_type'] = line[1:]
+                if file:
+                    file['file_type'] = line[1:]
                 continue
             if line[0] == 'u':
-                parsed[pid]['proc_user_id'] = line[1:]
+                process['proc_user_id'] = int(line[1:])
                 continue
             if line[0] == 'Z':
-                parsed[pid]['selinux_context'] = line[1:]
+                if file:
+                    file['selinux_context'] = line[1:]
+                    continue
+                process['selinux_context'] = line[1:]
                 continue
+
+        if file:
+            parsed.append(file)
+
         return parsed

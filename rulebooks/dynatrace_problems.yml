@@ -14,8 +14,8 @@
     # (windows)  $file = [System.IO.File]::Create("C:\users\ec2-user\dummylarge.txt"); $file.SetLength(10GB); $file.Close();
     - name: Launch Free Disk Space Remediation
       condition: >-
-        event['event.status'] == "OPEN" and
-        event['event.name'] == "Free Disk Space Below 30%"
+        event.status == "OPEN" and
+        event.name == "Free Disk Space Below 30%"
       action:
         run_workflow_template:
           name: EDA // Remediation Workflow // Disk Space
@@ -82,7 +82,7 @@
                   </p> [/code]
 
     - name: Launch Demo Job
-      condition: event is defined
+      condition: true
       action:
         run_job_template:
           name: EDA // No-Op

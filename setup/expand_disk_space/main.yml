@@ -1,0 +1,14 @@
+---
+- name: Setup Expand Disk Space Demo
+  hosts: localhost
+  gather_facts: false
+  become: false
+
+  vars_files:
+    - vars/aws.yml
+    - vars/aws_launch_template.yml
+
+  tasks:
+    - name: Setup AWS environment
+      ansible.builtin.include_tasks:
+        file: tasks/aws.yml

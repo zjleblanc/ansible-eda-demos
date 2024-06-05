@@ -3,10 +3,10 @@
   hosts: all
 
   sources:
-    - dynatrace.event_driven_ansible.dt_esa_api:
-        dt_api_host: "{{ DYNATRACE_HOST }}"
-        dt_api_token: "{{ DYNATRACE_API_TOKEN }}"
-        delay: 30
+    - dynatrace.event_driven_ansible.dt_webhook:
+        host: 0.0.0.0
+        port: "{{ DT_WEBHOOK_PORT }}"
+        token: "{{ DT_WEBHOOK_TOKEN }}"
 
   rules:
     # Commands to generate mock disk consumption
@@ -14,8 +14,8 @@
     # (windows)  $file = [System.IO.File]::Create("C:\users\ec2-user\dummylarge.txt"); $file.SetLength(10GB); $file.Close();
     - name: Launch Free Disk Space Remediation
       condition: >-
-        event.status == "OPEN" and
-        event.title == "Free Disk Space Below 30%"
+        event.payload.status == "OPEN" and
+        event.payload.title == "Free Disk Space Below 30%"
       action:
         run_workflow_template:
           name: EDA // Remediation Workflow // Disk Space
@@ -37,8 +37,8 @@
 
     - name: Launch OneAgent Remediation
       condition: >-
-        event.status == "OPEN" and
-        event.title == "OneAgent monitoring unavailable"
+        event.payload.status == "OPEN" and
+        event.payload.title == "OneAgent monitoring unavailable"
       action:
         run_workflow_template:
           name: EDA // Remediation Workflow // OneAgent
@@ -60,8 +60,8 @@
 
     - name: Launch High Memory Usage Remediation
       condition: >-
-        event.status == "OPEN" and
-        event.title is match("The memory usage has spiked")
+        event.payload.status == "OPEN" and
+        event.payload.title is match("The memory usage has spiked")
       action:
         run_workflow_template:
           name: EDA // Remediation Workflow // High Memory Usage
@@ -85,7 +85,7 @@
       # Crawl, walk, run - hone in on specific problem types using conditions
       condition:
         all:
-          - event.status == "OPEN"
+          - event.payload.status == "OPEN"
       action:
         run_job_template:
           name: EDA // Dynatrace Problems

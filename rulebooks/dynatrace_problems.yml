@@ -13,70 +13,64 @@
     # (linux)    fallocate -l 4G dummy.img
     # (windows)  $file = [System.IO.File]::Create("C:\users\ec2-user\dummylarge.txt"); $file.SetLength(10GB); $file.Close();
     - name: Launch Free Disk Space Remediation
-      condition: >-
-        event.status == "OPEN" and
-        event.name == "Free Disk Space Below 30%"
+      condition: event.payload.eventData.name == "Free Disk Space Below 30%"
       action:
         run_workflow_template:
           name: EDA // Remediation Workflow // Disk Space
           organization: Autodotes
           job_args:
             extra_vars:
-              _host: "{{ event['impactedEntities'][0]['name'] }}"
+              _host: "{{ event.payload.eventData['host_name'] }}"
               _aws_region: "us-east-2"
-              inc_short_description: "{{ event['title'] }} [{{ event['impactedEntities'][0]['name'] }}]"
-              inc_description: "Auto-generated event by Ansible for Dynatrace problem {{ event['problemId'] }}"
+              inc_short_description: "{{ event.payload.eventData['name'] }} [{{ event.payload.eventData['host_name'] }}]"
+              inc_description: "Auto-generated event by Ansible for Dynatrace problem {{ event.payload.eventData['problemId'] }}"
               inc_other:
                 # problem_view: ui/apps/dynatrace.classic.problems/#problems/problemdetails;gtf=-6h;gf=all;
                 comments: >
-                  [code] <p>Impacted: {{ event['impactLevel'] }}</p> <p>Type: {{ event['severityLevel'] }}</p> <p>
-                    <a href="{{ DYNATRACE_HOST | replace('live', 'apps') }}/{{ DYNATRACE_PROBLEM_VIEW }}pid={{ event['problemId'] }}">
+                  [code] <p>
+                    <a href="{{ DT_PROBLEM_VIEW }}pid={{ event.payload.eventData['problemId'] }}">
                       View Problem Details
                     </a>
                   </p> [/code]
 
     - name: Launch OneAgent Remediation
-      condition: >-
-        event.payload.status == "OPEN" and
-        event.payload.title == "OneAgent monitoring unavailable"
+      condition: event.payload.eventData.name == "OneAgent monitoring unavailable"
       action:
         run_workflow_template:
           name: EDA // Remediation Workflow // OneAgent
           organization: Autodotes
           job_args:
             extra_vars:
-              _host: "{{ event['impactedEntities'][0]['name'] }}"
+              _host: "{{ event.payload.eventData['host_name'] }}"
               _aws_region: "us-east-2"
-              inc_short_description: "{{ event['title'] }} [{{ event['impactedEntities'][0]['name'] }}]"
-              inc_description: "Auto-generated event by Ansible for Dynatrace problem {{ event['problemId'] }}"
+              inc_short_description: "{{ event.payload.eventData['name'] }} [{{ event.payload.eventData['host_name'] }}]"
+              inc_description: "Auto-generated event by Ansible for Dynatrace problem {{ event.payload.eventData['problemId'] }}"
               inc_other:
                 # problem_view: ui/apps/dynatrace.classic.problems/#problems/problemdetails;gtf=-6h;gf=all;
                 comments: >
-                  [code] <p>Impacted: {{ event['impactLevel'] }}</p> <p>Type: {{ event['severityLevel'] }}</p> <p>
-                    <a href="{{ DYNATRACE_HOST | replace('live', 'apps') }}/{{ DYNATRACE_PROBLEM_VIEW }}pid={{ event['problemId'] }}">
+                  [code] <p>
+                    <a href="{{ DT_PROBLEM_VIEW }}pid={{ event.payload.eventData['problemId'] }}">
                       View Problem Details
                     </a>
                   </p> [/code]
 
     - name: Launch High Memory Usage Remediation
-      condition: >-
-        event.payload.status == "OPEN" and
-        event.payload.title is match("The memory usage has spiked")
+      condition: event.payload.eventData.name is match("The memory usage has spiked")
       action:
         run_workflow_template:
           name: EDA // Remediation Workflow // High Memory Usage
           organization: Autodotes
           job_args:
             extra_vars:
-              _host: "{{ event['impactedEntities'][0]['name'] }}"
+              _host: "{{ event.payload.eventData['host_name'] }}"
               _aws_region: "us-east-2"
-              inc_short_description: "{{ event['title'] }} [{{ event['impactedEntities'][0]['name'] }}]"
-              inc_description: "Auto-generated event by Ansible for Dynatrace problem {{ event['problemId'] }}"
+              inc_short_description: "{{ event.payload.eventData['name'] }} [{{ event.payload.eventData['host_name'] }}]"
+              inc_description: "Auto-generated event by Ansible for Dynatrace problem {{ event.payload.eventData['problemId'] }}"
               inc_other:
                 # problem_view: ui/apps/dynatrace.classic.problems/#problems/problemdetails;gtf=-6h;gf=all;
                 comments: >
-                  [code] <p>Impacted: {{ event['impactLevel'] }}</p> <p>Type: {{ event['severityLevel'] }}</p> <p>
-                    <a href="{{ DYNATRACE_HOST | replace('live', 'apps') }}/{{ DYNATRACE_PROBLEM_VIEW }}pid={{ event['problemId'] }}">
+                  [code] <p>
+                    <a href="{{ DT_PROBLEM_VIEW }}pid={{ event.payload.eventData['problemId'] }}">
                       View Problem Details
                     </a>
                   </p> [/code]

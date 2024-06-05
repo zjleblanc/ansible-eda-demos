@@ -1,5 +1,5 @@
 ---
-- name: Poll Dynatrace Problems API
+- name: Integrate with Dynatrace Workflow for Event-Driven Ansible
   hosts: all
 
   sources:
@@ -14,8 +14,8 @@
     # (windows)  $file = [System.IO.File]::Create("C:\users\ec2-user\dummylarge.txt"); $file.SetLength(10GB); $file.Close();
     - name: Launch Free Disk Space Remediation
       condition: >-
-        event.payload.status == "OPEN" and
-        event.payload.title == "Free Disk Space Below 30%"
+        event['event.status'] == "OPEN" and
+        event['event.name'] == "Free Disk Space Below 30%"
       action:
         run_workflow_template:
           name: EDA // Remediation Workflow // Disk Space
@@ -81,12 +81,9 @@
                     </a>
                   </p> [/code]
 
-    - name: Launch Generic Remediation Fact Gathering
-      # Crawl, walk, run - hone in on specific problem types using conditions
-      condition:
-        all:
-          - event.payload.status == "OPEN"
+    - name: Launch Demo Job
+      condition: event is defined
       action:
         run_job_template:
-          name: EDA // Dynatrace Problems
+          name: EDA // No-Op
           organization: Autodotes

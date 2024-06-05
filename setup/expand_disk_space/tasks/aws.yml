@@ -80,13 +80,13 @@
     metadata_options:
       instance_metadata_tags: enabled
       http_put_response_hop_limit: 2
-    security_group_ids:
-      - "{{ r_aws_sg.group_id }}"
     network_interfaces:
       - device_index: 0
         associate_public_ip_address: true
         delete_on_termination: true
         subnet_id: "{{ r_aws_subnet.subnet.id }}"
+        groups:
+          - "{{ r_aws_sg.group_id }}"
     user_data: "{{ lookup('template', 'userdata.sh.j2') | ansible.builtin.b64encode }}"
     tags: "{{ aws_base_tags }}"
 

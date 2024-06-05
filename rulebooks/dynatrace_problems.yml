@@ -23,12 +23,12 @@
               _host: "{{ event.payload.eventData['host_name'] }}"
               _aws_region: "us-east-2"
               inc_short_description: "{{ event.payload.eventData['name'] }} [{{ event.payload.eventData['host_name'] }}]"
-              inc_description: "Auto-generated event by Ansible for Dynatrace problem {{ event.payload.eventData['problemId'] }}"
+              inc_description: "Auto-generated event by Ansible for Dynatrace problem {{ event.payload.eventData['problem_id'] }}"
               inc_other:
                 # problem_view: ui/apps/dynatrace.classic.problems/#problems/problemdetails;gtf=-6h;gf=all;
                 comments: >
                   [code] <p>
-                    <a href="{{ DT_PROBLEM_VIEW }}pid={{ event.payload.eventData['problemId'] }}">
+                    <a href="{{ DT_PROBLEM_VIEW }}pid={{ event.payload.eventData['problem_id'] }}">
                       View Problem Details
                     </a>
                   </p> [/code]
@@ -44,12 +44,12 @@
               _host: "{{ event.payload.eventData['host_name'] }}"
               _aws_region: "us-east-2"
               inc_short_description: "{{ event.payload.eventData['name'] }} [{{ event.payload.eventData['host_name'] }}]"
-              inc_description: "Auto-generated event by Ansible for Dynatrace problem {{ event.payload.eventData['problemId'] }}"
+              inc_description: "Auto-generated event by Ansible for Dynatrace problem {{ event.payload.eventData['problem_id'] }}"
               inc_other:
                 # problem_view: ui/apps/dynatrace.classic.problems/#problems/problemdetails;gtf=-6h;gf=all;
                 comments: >
                   [code] <p>
-                    <a href="{{ DT_PROBLEM_VIEW }}pid={{ event.payload.eventData['problemId'] }}">
+                    <a href="{{ DT_PROBLEM_VIEW }}pid={{ event.payload.eventData['problem_id'] }}">
                       View Problem Details
                     </a>
                   </p> [/code]
@@ -65,12 +65,12 @@
               _host: "{{ event.payload.eventData['host_name'] }}"
               _aws_region: "us-east-2"
               inc_short_description: "{{ event.payload.eventData['name'] }} [{{ event.payload.eventData['host_name'] }}]"
-              inc_description: "Auto-generated event by Ansible for Dynatrace problem {{ event.payload.eventData['problemId'] }}"
+              inc_description: "Auto-generated event by Ansible for Dynatrace problem {{ event.payload.eventData['problem_id'] }}"
               inc_other:
                 # problem_view: ui/apps/dynatrace.classic.problems/#problems/problemdetails;gtf=-6h;gf=all;
                 comments: >
                   [code] <p>
-                    <a href="{{ DT_PROBLEM_VIEW }}pid={{ event.payload.eventData['problemId'] }}">
+                    <a href="{{ DT_PROBLEM_VIEW }}pid={{ event.payload.eventData['problem_id'] }}">
                       View Problem Details
                     </a>
                   </p> [/code]

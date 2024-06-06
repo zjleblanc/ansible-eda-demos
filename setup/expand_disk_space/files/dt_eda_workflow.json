@@ -1,0 +1,63 @@
+{
+  "id": "53ec65a9-cd72-4f11-8f53-423192333557",
+  "title": "EDA Workflow [zjl]",
+  "tasks": {
+    "decorate_event": {
+      "name": "decorate_event",
+      "action": "dynatrace.automations:execute-dql-query",
+      "description": "Executes DQL query",
+      "input": {
+        "query": "fetch events\n| filter event.id == \"{{ event()['event.id'] }}\" and event.status_transition == \"CREATED\"\n| fieldsAdd host_id=arrayFirst(affected_entity_ids)\n| fieldsAdd problem_id=arrayFirst(dt.davis.event_ids)\n| join [ fetch dt.entity.host ],\n    on: { left[host_id] == right[id] },\n    fields: { host_name = entity.name }\n| fields host_name, host_id, problem_id=event.id, display_id, tags=entity_tags, name=event.name, status=event.status, start=event.start",
+        "failOnEmptyResult": true
+      },
+      "position": {
+        "x": 0,
+        "y": 1
+      },
+      "predecessors": []
+    },
+    "send_event_to_event-driven-ansible_1": {
+      "name": "send_event_to_event-driven-ansible_1",
+      "action": "dynatrace.redhat.ansible:send-event-to-eda",
+      "description": "Send an event to the Red Hat Event-Driven-Ansible Controller via Event Source Plugin",
+      "input": {
+        "eventData": "{{ _.decorated }}",
+        "connectionId": "vu9U3hXa3q0AAAABADNhcHA6ZHluYXRyYWNlLnJlZGhhdC5hbnNpYmxlOmVkYS13ZWJob29rLmNvbm5lY3Rpb24ABnRlbmFudAAGdGVuYW50ACQzNTAzY2RjMC0zZDcyLTMxNTYtOWU2YS1mNjM5MzYzNmI5ZTe-71TeFdrerQ"
+      },
+      "position": {
+        "x": 0,
+        "y": 2
+      },
+      "predecessors": [
+        "decorate_event"
+      ],
+      "conditions": {
+        "states": {
+          "decorate_event": "OK"
+        }
+      },
+      "withItems": "decorated in {{ result(\"decorate_event\")[\"records\"] }}",
+      "concurrency": 1
+    }
+  },
+  "description": "",
+  "actor": "204b6433-9d11-45f9-8823-b54a9dcfc741",
+  "owner": "204b6433-9d11-45f9-8823-b54a9dcfc741",
+  "ownerType": "USER",
+  "isPrivate": true,
+  "trigger": {
+    "eventTrigger": {
+      "isActive": true,
+      "filterQuery": "event.kind == \"DAVIS_PROBLEM\" \nAND event.status_transition == \"CREATED\"\nAND isNotNull(affected_entity_ids)\nAND matchesValue(labels.alerting_profile, \"Alerting Profile [zjl]\")",
+      "uniqueExpression": null,
+      "triggerConfiguration": {
+        "type": "event",
+        "value": {
+          "query": "event.kind == \"DAVIS_PROBLEM\" \nAND event.status_transition == \"CREATED\"\nAND isNotNull(affected_entity_ids)\nAND matchesValue(labels.alerting_profile, \"Alerting Profile [zjl]\")",
+          "eventType": "events"
+        }
+      }
+    }
+  },
+  "schemaVersion": 3
+}

@@ -5,7 +5,7 @@
   sources:
     - dynatrace.event_driven_ansible.dt_webhook:
         host: 0.0.0.0
-        port: 5005
+        port: "{{ DT_WEBHOOK_PORT }}"
         token: "{{ DT_WEBHOOK_TOKEN }}"
 
   rules:
@@ -81,3 +81,6 @@
         run_job_template:
           name: EDA // No-Op
           organization: Autodotes
+          job_args:
+            extra_vars:
+              _hosts: localhost

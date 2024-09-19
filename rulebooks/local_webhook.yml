@@ -3,7 +3,7 @@
   hosts: all
 
   sources:
-    - ansible.eda.webhook:
+    - zjleblanc.utils.custom_webhook:
         host: 0.0.0.0
         port: 5003
 
@@ -13,3 +13,9 @@
       action:
         debug:
           msg: "{{ event.payload.payload }}"
+
+    - name: Catch and Log
+      condition: 1 == 1
+      action:
+        debug:
+          msg: "{{ event.payload }}"

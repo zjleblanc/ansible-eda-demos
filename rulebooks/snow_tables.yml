@@ -24,3 +24,6 @@
         run_job_template:
           name: EDA // No-Op
           organization: Autodotes
+          job_args:
+            extra_vars:
+              _hosts: "{{ event.payload._hosts | default('localhost') }}"

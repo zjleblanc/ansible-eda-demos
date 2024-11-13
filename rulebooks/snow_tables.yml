@@ -26,4 +26,4 @@
           organization: Autodotes
           job_args:
             extra_vars:
-              _hosts: "{{ event.payload._hosts | default('localhost') }}"
+              _hosts: "{{ (event.payload | default({}))['_hosts'] | default('localhost') }}"

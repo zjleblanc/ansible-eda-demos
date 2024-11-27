@@ -1,0 +1,3 @@
+---
+skip_list:
+  - schema[rulebook] # Broken rules causing false errors

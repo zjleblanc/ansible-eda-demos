@@ -5,7 +5,8 @@
 
   sources:
     # will be replaced by Event Stream
-    - ansible.eda.webhook:
+    - name: Dynatrace Event Source
+      ansible.eda.webhook:
         host: 0.0.0.0
         port: 5010
 

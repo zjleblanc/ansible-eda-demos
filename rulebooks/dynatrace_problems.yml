@@ -1,3 +1,4 @@
+### DEPRECATED ###
 ---
 - name: Poll Dynatrace Problems API
   hosts: all

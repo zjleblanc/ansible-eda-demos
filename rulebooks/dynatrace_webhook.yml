@@ -1,3 +1,4 @@
+### Preferred method for AAP <=2.4 ###
 ---
 - name: Integrate with Dynatrace Workflow for Event-Driven Ansible
   hosts: all

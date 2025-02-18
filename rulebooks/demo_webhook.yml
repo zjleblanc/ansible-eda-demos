@@ -9,13 +9,13 @@
 
   rules:
     - name: Demo match condition
-      condition: event.payload.content is search(search_term | default('alert'))
+      condition: event.payload.content is search(vars.search_term)
       action:
         debug:
-          msg: "{{ event.payload.payload }}"
+          msg: "Matched! => {{ event.payload }}"
 
     - name: Catch and Log
       condition: 1 == 1
       action:
         debug:
-          msg: "{{ event.payload }}"
+          msg: "No match => {{ event.payload }}"

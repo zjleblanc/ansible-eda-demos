@@ -1,5 +1,5 @@
 ---
-- name: Basic local webhook for testing
+- name: Basic webhook for demo purposes
   hosts: all
 
   sources:
@@ -8,8 +8,8 @@
         port: 5003
 
   rules:
-    - name: Launch Remediation Job
-      condition: event.payload.incident.alerts[0].tags is selectattr('value', '==', 'cpu')
+    - name: Demo match condition
+      condition: event.payload.content is search(search_term | default('alert'))
       action:
         debug:
           msg: "{{ event.payload.payload }}"

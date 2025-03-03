@@ -1,0 +1,17 @@
+---
+- name: Ingest Service Now Requested Items
+  hosts: all
+
+  sources:
+    # will be replaced by Event Stream
+    - name: Service Now Event Source
+      ansible.eda.webhook:
+        host: 0.0.0.0
+        port: 5003
+
+  rules:
+    - name: Catch 'em All
+      condition: 1 == 1
+      action:
+        debug:
+          msg: "{{ event.payload | to_nice_json(indent=2) }}"

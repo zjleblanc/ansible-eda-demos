@@ -14,4 +14,4 @@
       condition: 1 == 1
       action:
         debug:
-          msg: "{{ event.payload | to_nice_json(indent=2) }}"
+          msg: "{{ event.payload }}"

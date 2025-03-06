@@ -1,37 +1,37 @@
 (function executeRule(current, previous) {
-	var payload = {};
-	var fields = new GlideRecordUtil().getFields(current);
-	for(var field in fields) {
-		var field_name = fields[field];
-		var field_type = current.getElement(field_name).getED().getInternalType();
-		if(field_name == 'variables') {
-			continue;
-		}
-		else if(field_type == 'boolean' || field_type == 'journal_input') {
-			var variable_display_value = current.getDisplayValue(field_name);
-			if(variable_display_value) {
-				payload[field_name] = variable_display_value;
-			}
-		}
-		else {
-			var variable_value = current.getValue(field_name);
-			if(variable_value) {
-				payload[field_name] = variable_value;
-			}
-		}
-	}
-
-	payload['variables'] = {};
-  var variables = current.variables.getElements();
-  for (var i=0; i<variables.length; i++) {
-      var question = variables[i].getQuestion();
-  payload['variables'][question.getName()] = question.getValue();
+  var payload = {};
+  var fields = new GlideRecordUtil().getFields(current);
+  for(var field in fields) {
+    var field_name = fields[field];
+    var field_type = current.getElement(field_name).getED().getInternalType();
+    if(field_name == 'variables') {
+      continue;
+    }
+    else if(field_type == 'boolean' || field_type == 'journal_input') {
+      var variable_display_value = current.getDisplayValue(field_name);
+      if(variable_display_value) {
+        payload[field_name] = variable_display_value;
+      }
+    }
+    else {
+      var variable_value = current.getValue(field_name);
+      if(variable_value) {
+        payload[field_name] = variable_value;
+      }
+    }
   }
 
-	var REST_MESSAGE_NAME = "{{ sn_rest_message_name }}";
-	var request = new sn_ws.RESTMessageV2(REST_MESSAGE_NAME, "{{ sn_rest_message_fn_name }}");
-	var request_body = JSON.stringify(payload);
-	request.setRequestBody(request_body);
-	request.setTimeout(1000);
-	request.execute();
+  payload['variables'] = {};
+  var variables = current.variables.getElements();
+  for (var i=0; i<variables.length; i++) {
+    var question = variables[i].getQuestion();
+    payload['variables'][question.getName()] = question.getValue();
+  }
+
+  var REST_MESSAGE_NAME = "{{ sn_rest_message_name }}";
+  var request = new sn_ws.RESTMessageV2(REST_MESSAGE_NAME, "{{ sn_rest_message_fn_name }}");
+  var request_body = JSON.stringify(payload);
+  request.setRequestBody(request_body);
+  request.setTimeout(1000);
+  request.execute();
 })(current, previous);

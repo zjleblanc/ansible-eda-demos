@@ -8,6 +8,8 @@
     # aap_event_stream: "https://aap.example.com/eda-event-streams/api/eda/v1/external_event_stream/b3b0a02f-*/post/"
     # aap_event_stream_token: s3cr3t0k3n
     # sys_user_id: <guid>
+    sn_business_rule_name: Zach LeBlanc - Service Catalog Requests
+    sn_business_rule_desc: Post event to EDA when user makes any Service Catalog request
     sn_rest_message_name: Zach LeBlanc - EDA
     sn_rest_message_fn_name: POST
 
@@ -65,10 +67,10 @@
         snow_records:
           - type: sys_script
             data:
-              name: Zach LeBlanc - Service Catalog Requests
+              name: "{{ sn_business_rule_name }}"
               filter_condition: "requested_for={{ sys_user_id }}^EQ"
               when: after
-              description: Post event to EDA when user makes any Service Catalog request
+              description: "{{ sn_business_rule_desc }}"
               collection: sc_req_item
               active: true
               advanced: true

@@ -22,11 +22,11 @@
 	}
 
 	payload['variables'] = {};
-    var variables = current.variables.getElements();
-    for (var i=0; i<variables.length; i++) {
-        var question = variables[i].getQuestion();
-		payload['variables'][question.getName()] = question.getValue();
-    }
+  var variables = current.variables.getElements();
+  for (var i=0; i<variables.length; i++) {
+      var question = variables[i].getQuestion();
+  payload['variables'][question.getName()] = question.getValue();
+  }
 
 	var REST_MESSAGE_NAME = "{{ sn_rest_message_name }}";
 	var request = new sn_ws.RESTMessageV2(REST_MESSAGE_NAME, "{{ sn_rest_message_fn_name }}");

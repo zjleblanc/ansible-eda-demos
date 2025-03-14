@@ -6,9 +6,16 @@
 
   vars_files:
     - vars/aws.yml
-    - vars/aws_launch_template.yml
+
+  ## Required ENV vars ##
+  # DT_API_TOKEN
 
   tasks:
+    - name: Include platform variables
+      ansible.builtin.include_vars:
+        file: "vars/{{ target_platform }}_launch_template.yml"
+
     - name: Setup AWS environment
       ansible.builtin.include_tasks:
         file: tasks/aws.yml
+...

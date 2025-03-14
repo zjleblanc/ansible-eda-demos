@@ -87,7 +87,7 @@
         subnet_id: "{{ r_aws_subnet.subnet.id }}"
         groups:
           - "{{ r_aws_sg.group_id }}"
-    user_data: "{{ lookup('template', 'userdata.sh.j2') | ansible.builtin.b64encode }}"
+    user_data: "{{ lookup('template', target_platform + '.userdata.j2') | ansible.builtin.b64encode }}"
     tags: "{{ aws_base_tags }}"
 
 - name: Create ec2 instances

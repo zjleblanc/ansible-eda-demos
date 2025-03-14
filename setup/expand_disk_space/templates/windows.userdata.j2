@@ -35,8 +35,7 @@ Invoke-WebRequest -Uri 'https://ozi92582.live.dynatrace.com/api/v1/deployment/in
 .\Dynatrace-OneAgent-Windows-1.307.61.20250226-155505.exe --set-monitoring-mode=fullstack --set-app-log-content-access=true
 
 # change Windows computer name to Name tag
-$instanceId = (Invoke-WebRequest http://169.254.169.254/latest/meta-data/instance-id -UseBasicParsing).Content
-$instanceName = (Get-EC2Tag -filter @{ Name="resource-id"; Value=$instanceid }, @{ Name="key"; Value="Name"}).Value
+$instanceName = (Get-EC2InstanceMetadata -Path /tags/instance/Name)
 $pattern = "^(?![0-9]{1,15}$)[a-zA-Z0-9-]{1,15}$"
 If ($instanceName -match $pattern) {
 	Try {

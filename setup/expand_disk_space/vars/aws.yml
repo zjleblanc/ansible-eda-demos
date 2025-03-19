@@ -12,8 +12,8 @@ aws_region: us-east-2
 aws_key_name: demo-keypair
 aws_public_key_src: "~/.ssh/id_rsa.pub"
 aws_ec2_names:
-  - "{{ target_platform }}-eda-demo-vm-1"
-  - "{{ target_platform }}-eda-demo-vm-2"
+  - "{{ prefix | default(target_platform) }}-eda-1"
+  - "{{ prefix | default(target_platform) }}-eda-2"
 
 aws_base_tags:
   owner: "{{ aws_owner_tag }}"

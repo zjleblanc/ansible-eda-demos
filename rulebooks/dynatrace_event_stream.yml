@@ -16,6 +16,10 @@
     # (windows)  $file = [System.IO.File]::Create("C:\users\ec2-user\dummylarge.txt"); $file.SetLength(10GB); $file.Close();
     - name: Launch Free Disk Space Remediation
       condition: event.payload.name == "Free Disk Space Below 30%"
+      throttle:
+        once_within: 30 minutes
+        group_by_attributes:
+          - event.payload['host_name']
       action:
         run_workflow_template:
           name: EDA // Remediation Workflow // Disk Space

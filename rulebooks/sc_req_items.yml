@@ -13,14 +13,14 @@
     - name: Provision VM
       condition: event.payload.cat_item == 'a1adfeaf87f46a1064a055383cbb35d9'
       action:
-          run_workflow_template:
-            name: AWS // Provisioning Workflow
-            organization: Autodotes
-            job_args:
-              extra_vars:
-                aws_ec2_names_list: "{{ event.payload.variables['sn_vm_name'] }}"
-                target_platform: "{{ event.payload.variables['sn_target_platform'] }}"
-                aws_region: "{{ sn_aws_region }}"
+        run_workflow_template:
+          name: AWS // Provisioning Workflow
+          organization: Autodotes
+          job_args:
+            extra_vars:
+              aws_ec2_names_list: "{{ event.payload['variables']['sn_vm_name'] }}"
+              target_platform: "{{ event.payload['variables']['sn_target_platform'] }}"
+              aws_region: "{{ event.payload['variables']['sn_aws_region'] }}"
 
     - name: Catch 'em All
       condition: 1 == 1

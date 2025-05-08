@@ -21,6 +21,11 @@
               aws_ec2_names_list: "{{ event.payload['variables']['sn_vm_name'] }}"
               target_platform: "{{ event.payload['variables']['sn_target_platform'] }}"
               aws_region: "{{ event.payload['variables']['sn_aws_region'] }}"
+              dnf_packages:
+                - kernel
+                - kernel-core
+                - kernel-modules
+                - kernel-modules-core
 
     - name: Decommission VM
       condition: event.payload.cat_item == '85c7c43f873c6a1064a055383cbb35dc'

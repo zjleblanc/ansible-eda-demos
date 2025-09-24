@@ -1,0 +1,22 @@
+### Preferred method for AAP 2.5+ ###
+---
+- name: Integrate with DataDog Workflow for Event-Driven Ansible
+  hosts: all
+
+  sources:
+    # will be replaced by Event Stream
+    - name: DataDog Event Source
+      ansible.eda.webhook:
+        host: 0.0.0.0
+        port: 5010
+
+  rules:
+    - name: Launch Demo Job
+      condition: true
+      action:
+        run_job_template:
+          name: EDA // No-Op
+          organization: Autodotes
+          job_args:
+            extra_vars:
+              _hosts: localhost

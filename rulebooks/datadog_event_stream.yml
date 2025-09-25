@@ -11,6 +11,33 @@
         port: 5010
 
   rules:
+    # Commands to generate mock disk consumption
+    # (linux)    fallocate -l 4G dummy.img
+    # (windows)  $file = [System.IO.File]::Create("C:\users\ec2-user\dummylarge.txt"); $file.SetLength(10GB); $file.Close();
+    - name: Launch Free Disk Space Remediation
+      condition: event.payload.alert_title.startswith("Free Disk Space Below")
+      throttle:
+        once_within: 30 minutes
+        group_by_attributes:
+          - event.payload['hostname']
+      action:
+        run_workflow_template:
+          name: EDA // Remediation Workflow // Disk Space
+          organization: Autodotes
+          job_args:
+            extra_vars:
+              _host: "{{ event.payload['hostname'] }}"
+              _aws_region: "us-east-2"
+              inc_short_description: "{{ event.payload['alert_title'] }} [{{ event.payload['hostname'] }}]"
+              inc_description: "Auto-generated event by Ansible for DataDog alert {{ event.payload['event_link'] }}"
+              inc_other:
+                comments: >
+                  [code] <p>
+                    <a href="{{ event.payload['event_link'] }}">
+                      View Event Details
+                    </a>
+                  </p> [/code]
+
     - name: Launch Demo Job
       condition: true
       action:

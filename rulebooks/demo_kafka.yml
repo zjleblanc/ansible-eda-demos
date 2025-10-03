@@ -13,7 +13,7 @@
 
   rules:
     - name: Demo match condition
-      condition: event.content is search(vars.search_term)
+      condition: event.body.content is search(vars.search_term)
       action:
         debug:
           msg: "Matched! => {{ event }}"

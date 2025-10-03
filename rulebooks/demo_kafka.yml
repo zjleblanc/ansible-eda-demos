@@ -1,0 +1,25 @@
+---
+- name: Basic kafka consumer for demo purposes
+  hosts: all
+
+  sources:
+    - name: Demo Kafka Event Source
+      ansible.eda.kafka:
+        host: "{{ kafka_host }}"
+        port: "{{ kafka_port }}"
+        topics: "{{ kafka_topics }}"
+        check_hostname: false
+        verify_mode: CERT_OPTIONAL
+
+  rules:
+    - name: Demo match condition
+      condition: event.payload.content is search(vars.search_term)
+      action:
+        debug:
+          msg: "Matched! => {{ event.payload }}"
+
+    - name: Catch and Log
+      condition: 1 == 1
+      action:
+        debug:
+          msg: "No match => {{ event.payload }}"

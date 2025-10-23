@@ -1,0 +1,5 @@
+kafka_host: 18.221.162.38 # replace with ip or fqdn of target kafka host
+kafka_port: 9093
+kafka_topics:
+  - demo-events
+search_term: demo

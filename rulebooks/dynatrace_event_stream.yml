@@ -31,6 +31,7 @@
               inc_short_description: "{{ event.payload['name'] }} [{{ event.payload['host_name'] }}]"
               inc_description: "Auto-generated event by Ansible for Dynatrace problem {{ event.payload['problem_id'] }}"
               inc_other:
+                cmdb_ci: "{{ event.payload['host_name'] }}"
                 # problem_view: ui/apps/dynatrace.classic.problems/#problems/problemdetails;gtf=-6h;gf=all;
                 comments: >
                   [code] <p>

@@ -53,10 +53,6 @@
                 request_item: "{{ event.payload['number'] }}"
                 short_description: "Ansible initiating Terraform deployment of resources to Azure"
                 assignment_group: "Ansible West Tigers"
-                work_notes: >-
-                  [code]<pre>
-                    {{ event.payload | to_nice_json(indent=2) | replace('\n', '<br>') }}
-                  </pre>[/code]
 
     - name: Catch 'em All
       condition: 1 == 1

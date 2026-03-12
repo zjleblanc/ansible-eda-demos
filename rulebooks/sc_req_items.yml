@@ -37,6 +37,19 @@
             extra_vars:
               aws_ec2_names_list: "{{ event.payload['variables']['sn_vm_name'] }}"
 
+    - name: Deploy and Configure VM - Ansible + Terraform
+      condition: event.payload.cat_item == '3dfcbfc687633e106a094046cebb3507'
+      action:
+        run_workflow_template:
+          name: Terraform // HCP // Azure Deploy and Configure Workflow
+          organization: Autodotes
+          job_args:
+            extra_vars:
+              az_ssh_pubkey: "{{ event.payload['variables']['sn_ssh_public_key'] }}"
+              az_web_vm_size: "{{ event.payload['variables']['sn_azure_vm_size'] }}"
+              sn_req_item: "{{ event.payload['number'] }}"
+              sn_created_by: "{{ event.payload['sys_created_by'] }}"
+
     - name: Catch 'em All
       condition: 1 == 1
       action:

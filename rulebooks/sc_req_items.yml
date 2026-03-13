@@ -51,7 +51,6 @@
               sn_created_by: "{{ event.payload['sys_created_by'] }}"
               create_sc_task_data:
                 request_item: "{{ event.payload['number'] }}"
-                short_description: "Ansible initiating Terraform deployment of resources to Azure"
                 assignment_group: "Ansible West Tigers"
 
     - name: Catch 'em All

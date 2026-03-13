@@ -49,7 +49,7 @@
               az_web_vm_size: "{{ event.payload['variables']['sn_azure_vm_size'] }}"
               sn_req_item: "{{ event.payload['number'] }}"
               sn_created_by: "{{ event.payload['sys_created_by'] }}"
-              create_sctask_data:
+              create_sc_task_data:
                 request_item: "{{ event.payload['number'] }}"
                 short_description: "Ansible initiating Terraform deployment of resources to Azure"
                 assignment_group: "Ansible West Tigers"

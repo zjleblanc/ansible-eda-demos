@@ -13,13 +13,15 @@
     - name: Create Label
       condition: event.label is not defined
       action:
-        run_playbook:
-          name: playbooks/create_label.yml
+        run_job_template:
+          name: AAP // Create Label
+          organization: Autodotes
           post_events: true
-          extra_vars:
-            label: "{{ event.payload['number'] }}"
-            organization: "Autodotes"
-            payload: "{{ event.payload }}"
+          job_args:
+            extra_vars:
+              organization: "Autodotes"
+              label: "{{ event.payload['number'] }}"
+              payload: "{{ event.payload }}"
 
     - name: Provision VM
       condition: event.payload.cat_item == 'a1adfeaf87f46a1064a055383cbb35d9'

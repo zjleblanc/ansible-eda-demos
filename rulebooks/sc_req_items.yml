@@ -12,7 +12,7 @@
   rules:
     - name: Create Label
       condition: >
-        event.payload.labeled_event is not defined and
+        event.labeled_event is not defined and
         event.payload.cat_item == '3dfcbfc687633e106a094046cebb3507'
       action:
         run_job_template:
@@ -53,19 +53,18 @@
               aws_ec2_names_list: "{{ event.payload['variables']['sn_vm_name'] }}"
 
     - name: Deploy and Configure VM - Ansible + Terraform
-      condition: event.payload.labeled_event.cat_item == '3dfcbfc687633e106a094046cebb3507'
+      condition: event.labeled_event.cat_item == '3dfcbfc687633e106a094046cebb3507'
       action:
         run_workflow_template:
           name: Terraform // HCP // Azure Deploy and Configure Workflow
           organization: Autodotes
           job_args:
             extra_vars:
-              az_ssh_pubkey: "{{ event.payload.labeled_event['variables']['sn_ssh_public_key'] }}"
-              az_web_vm_size: "{{ event.payload.labeled_event['variables']['sn_azure_vm_size'] }}"
-              sn_req_item: "{{ event.payload.labeled_event['number'] }}"
-              sn_created_by: "{{ event.payload.labeled_event['sys_created_by'] }}"
+              az_ssh_pubkey: "{{ event.labeled_event['variables']['sn_ssh_public_key'] }}"
+              az_web_vm_size: "{{ event.labeled_event['variables']['sn_azure_vm_size'] }}"
+              sn_created_by: "{{ event.labeled_event['sys_created_by'] }}"
               create_sc_task_data:
-                request_item: "{{ event.payload.labeled_event['number'] }}"
+                request_item: "{{ event.labeled_event['number'] }}"
                 assignment_group: "Ansible West Tigers"
 
     - name: Catch 'em All

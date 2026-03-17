@@ -58,6 +58,8 @@
         run_workflow_template:
           name: Terraform // HCP // Azure Deploy and Configure Workflow
           organization: Autodotes
+          labels:
+            - "{{ event.labeled_event['aap_label'] }}"
           job_args:
             extra_vars:
               az_ssh_pubkey: "{{ event.labeled_event['variables']['sn_ssh_public_key'] }}"

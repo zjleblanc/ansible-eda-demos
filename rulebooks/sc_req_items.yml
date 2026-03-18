@@ -54,7 +54,7 @@
               aws_ec2_names_list: "{{ event.payload['variables']['sn_vm_name'] }}"
 
     - name: Deploy and Configure VM - Ansible + Terraform
-      condition: event.labeled_event.cat_item == '3dfcbfc687633e106a094046cebb3507' and event.labeled_event.sys_mod_count == 1
+      condition: event.labeled_event.cat_item == '3dfcbfc687633e106a094046cebb3507' and event.labeled_event.sys_mod_count == '1'
       action:
         run_workflow_template:
           name: Terraform // HCP // Azure Deploy and Configure Workflow

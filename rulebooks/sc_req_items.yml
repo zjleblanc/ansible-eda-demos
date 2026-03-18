@@ -67,6 +67,7 @@
               sn_created_by: "{{ event.labeled_event['sys_created_by'] }}"
               create_sc_task_data:
                 request_item: "{{ event.labeled_event['number'] }}"
+                request_item_sys_id: "{{ event.labeled_event['sys_id'] }}"
                 assignment_group: "Ansible West Tigers"
 
     - name: Catch 'em All

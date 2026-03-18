@@ -13,7 +13,8 @@
     - name: Create Label
       condition: >
         event.labeled_event is not defined and
-        event.payload.cat_item == '3dfcbfc687633e106a094046cebb3507'
+        event.payload.cat_item == '3dfcbfc687633e106a094046cebb3507' and
+        event.payload.sys_mod_count == 1
       action:
         run_job_template:
           name: AAP // Create Label
@@ -26,7 +27,7 @@
               payload: "{{ event.payload }}"
 
     - name: Provision VM
-      condition: event.payload.cat_item == 'a1adfeaf87f46a1064a055383cbb35d9'
+      condition: event.payload.cat_item == 'a1adfeaf87f46a1064a055383cbb35d9' and event.payload.sys_mod_count == 1
       action:
         run_workflow_template:
           name: AWS // Provisioning Workflow
@@ -43,7 +44,7 @@
                 - kernel-modules-core
 
     - name: Decommission VM
-      condition: event.payload.cat_item == '85c7c43f873c6a1064a055383cbb35dc'
+      condition: event.payload.cat_item == '85c7c43f873c6a1064a055383cbb35dc' and event.payload.sys_mod_count == 1
       action:
         run_workflow_template:
           name: AWS // Decommission Workflow
@@ -53,7 +54,7 @@
               aws_ec2_names_list: "{{ event.payload['variables']['sn_vm_name'] }}"
 
     - name: Deploy and Configure VM - Ansible + Terraform
-      condition: event.labeled_event.cat_item == '3dfcbfc687633e106a094046cebb3507'
+      condition: event.labeled_event.cat_item == '3dfcbfc687633e106a094046cebb3507' and event.labeled_event.sys_mod_count == 1
       action:
         run_workflow_template:
           name: Terraform // HCP // Azure Deploy and Configure Workflow

@@ -1,4 +1,4 @@
-# ServiceNow business rules → Event-Driven Ansible for `sc_req_item`
+# Using ServiceNow Business with Event-Driven Ansible
 
 This guide explains how the Ansible playbook in [`integrations/service_now_business_rule.yml`](../integrations/service_now_business_rule.yml) configures ServiceNow to POST JSON to an Ansible Automation Platform (AAP) **external event stream**, and how [`rulebooks/sc_req_items.yml`](../rulebooks/sc_req_items.yml) consumes those events—including the **Create Label** pattern that tags work in AAP and re-enters the rulebook so the right downstream rule can run.
 

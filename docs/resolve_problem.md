@@ -4,7 +4,7 @@ The Dynatrace Problems API can surface all sorts of issues detected by OneAgent 
 
 ### links to source
 
-- [Rulebook](../rulebooks/dynatrace_problems.yml)
+- [Rulebook](../legacy/dynatrace_problems.yml)
 - [Playbook](../playbooks/resolve_problem.yml)
 - [Synthetic Event Payload](../files/dynatrace_eda_payload.json)
 

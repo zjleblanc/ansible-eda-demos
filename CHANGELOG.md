@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-08-16 — Consolidate legacy rulebooks under legacy/
+
+### Changed
+- Renamed `archive/` to `legacy/` and updated README references to use legacy terminology
+- Moved Dynatrace webhook, New Relic disk remediation, Linux remediation, and Zabbix rulebooks from `rulebooks/` into `legacy/` alongside the former archive polling examples
+
 ## 2026-08-16 — Add OpenFlake VM provisioning to ServiceNow rulebook
 
 ### Added

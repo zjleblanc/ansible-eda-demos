@@ -28,7 +28,7 @@ integrations/       ServiceNow business rule and REST message setup
 files/              Sample event payloads for testing
 docs/               How-to guides and screenshots
 vars/               Variable files for demo rulebooks
-archive/            Deprecated event sources
+legacy/             Legacy source-plugin and polling rulebook examples
 ```
 
 ## Event streams and source plugins
@@ -69,17 +69,14 @@ When you create a rulebook activation in the EDA controller, you map each source
 
 ### Legacy source plugin examples
 
-Some rulebooks in this repo still use vendor-specific source plugins as reference examples from earlier AAP versions:
+The `legacy/` directory holds reference rulebooks from earlier AAP versions that use vendor-specific source plugins or polling instead of event streams:
 
-| Rulebook | Source plugin | Notes |
-|----------|--------------|-------|
+| Legacy rulebook | Source plugin | Notes |
+|-----------------|--------------|-------|
 | `dynatrace_webhook.yml` | `dynatrace.event_driven_ansible.dt_webhook` | AAP ≤ 2.4; payloads nested under `event.payload.eventData` |
 | `remediate_disk_usage_nr.yml` | `ansible.eda.webhook` | New Relic webhook (no vendor plugin, but pre-event-stream pattern) |
-
-The `archive/` directory contains fully deprecated examples that polled vendor APIs on a timer rather than receiving webhooks:
-
-| Archived rulebook | Source plugin | Notes |
-|-------------------|--------------|-------|
+| `remediate_linux.yml` | `ansible.eda.webhook` | Linux remediation demo webhook |
+| `zabbix.yml` | `ansible.eda.webhook` | Zabbix event webhook |
 | `dynatrace_problems.yml` | `dynatrace.event_driven_ansible.dt_esa_api` | Polled the Dynatrace Problems API on a 30-second interval |
 | `snow_tables.yml` | `cloin.eda.snow_records` | Polled ServiceNow `sc_req_item` and `incident` tables every second |
 

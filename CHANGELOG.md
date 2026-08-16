@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-08-16 — Add OpenFlake VM provisioning to ServiceNow rulebook
+
+### Added
+- OpenFlake Provision VM rule that triggers AWS // Provisioning Workflow // OpenFlake on matching catalog items
+- Commented placeholder for a future OpenFlake Decommission VM rule
+
+### Changed
+- Renamed the ServiceNow requested-items rulebook and event source to cover Standard and OpenFlake paths
+
 ## 2026-08-16 — Explain event streams and legacy source plugin architecture
 
 ### Changed

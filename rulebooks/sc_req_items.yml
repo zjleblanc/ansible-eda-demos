@@ -73,7 +73,7 @@
 
     ### OpenFlake Rules ###
     - name: Provision VM // OpenFlake
-      condition: event.payload.cat_item == 'a1adfeaf87f46a1064a055383cbb35d9' and event.payload.sys_mod_count == '0'
+      condition: event.payload.cat_item == 'c8f3167a9cb24b0198c698e31b007df1' and event.payload.sys_mod_count == '0'
       action:
         run_workflow_template:
           name: AWS // Provisioning Workflow // OpenFlake

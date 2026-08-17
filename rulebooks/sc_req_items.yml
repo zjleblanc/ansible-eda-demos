@@ -73,7 +73,7 @@
 
     ### OpenFlake Rules ###
     - name: Provision VM // OpenFlake
-      condition: event.payload.cat_item == 'c8f3167a9cb24b0198c698e31b007df1' and event.payload.sys_mod_count == '0'
+      condition: event.payload.cat_item == vars.of_vm_provision_cat_item and event.payload.sys_mod_count == '0'
       action:
         run_workflow_template:
           name: AWS // Provisioning Workflow // OpenFlake
@@ -89,15 +89,15 @@
                 - kernel-modules
                 - kernel-modules-core
 
-    # - name: Decommission VM // OpenFlake
-    #   condition: event.payload.cat_item == 'todo' and event.payload.sys_mod_count == '1'
-    #   action:
-    #     run_workflow_template:
-    #       name: AWS // Decommission Workflow // OpenFlake
-    #       organization: Autodotes
-    #       job_args:
-    #         extra_vars:
-    #           aws_ec2_names_list: "{{ event.payload['variables']['sn_vm_name'] }}"
+    - name: Decommission VM // OpenFlake
+      condition: event.payload.cat_item == vars.of_vm_decommission_cat_item and event.payload.sys_mod_count == '0'
+      action:
+        run_workflow_template:
+          name: AWS // Decommission Workflow // OpenFlake
+          organization: Autodotes
+          job_args:
+            extra_vars:
+              aws_ec2_names_list: "{{ event.payload['variables']['sn_vm_name'] }}"
 
     - name: Catch 'em All
       condition: 1 == 1

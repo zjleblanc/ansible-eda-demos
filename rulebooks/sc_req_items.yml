@@ -73,12 +73,12 @@
 
     ### OpenFlake Rules ###
     - name: Provision VM // OpenFlake
-      condition: event.payload.cat_item == 'a1adfeaf87f46a1064a055383cbb35d9' and (event.payload.sys_mod_count|int) == 0
+      condition: event.payload.cat_item == 'a1adfeaf87f46a1064a055383cbb35d9' and event.payload.sys_mod_count == '0'
       action:
         run_workflow_template:
           name: AWS // Provisioning Workflow // OpenFlake
           organization: Autodotes
-          job_args: 
+          job_args:
             extra_vars:
               aws_ec2_names_list: "{{ event.payload['variables']['sn_vm_name'] }}"
               target_platform: "{{ event.payload['variables']['sn_target_platform'] }}"

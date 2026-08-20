@@ -14,8 +14,31 @@
     # Commands to generate mock disk consumption
     # (linux)    fallocate -l 4G dummy.img
     # (windows)  $file = [System.IO.File]::Create("C:\users\ec2-user\dummylarge.txt"); $file.SetLength(10GB); $file.Close();
+    - name: Launch Free Disk Space Remediation // OpenFlake
+      condition: >
+        event.payload.eventData.name is match("Free Disk Space Below", ignorecase=true) and
+        event.payload.eventData.host_name is search("flake", ignorecase=true)
+      action:
+        run_workflow_template:
+          name: EDA // Remediation Workflow // Disk Space // OpenFlake
+          organization: Autodotes
+          job_args:
+            extra_vars:
+              _host: "{{ event.payload.eventData['host_name'] }}"
+              _aws_region: "us-east-2"
+              inc_short_description: "{{ event.payload.eventData['name'] }} [{{ event.payload.eventData['host_name'] }}]"
+              inc_description: "Auto-generated event by Ansible for Dynatrace problem {{ event.payload.eventData['problem_id'] }}"
+              inc_other:
+                # problem_view: ui/apps/dynatrace.classic.problems/#problems/problemdetails;gtf=-6h;gf=all;
+                comments: >
+                  [code] <p>
+                    <a href="{{ DT_PROBLEM_VIEW }}pid={{ event.payload.eventData['problem_id'] }}">
+                      View Problem Details
+                    </a>
+                  </p> [/code]
+
     - name: Launch Free Disk Space Remediation
-      condition: event.payload.name == "Free Disk Space Below 30%"
+      condition: event.payload.name is match("Free Disk Space Below", ignorecase=true)
       throttle:
         once_within: 30 minutes
         group_by_attributes:

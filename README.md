@@ -110,3 +110,4 @@ ansible-rulebook --rulebook rulebooks/demo_webhook.yml -i inventory -S SOURCE_AR
 - [ServiceNow catalog integration](docs/service_now_eda_sc_req_items.md)
 - [Disk space remediation lab](docs/expand_disk_space.md)
 - [Resolve Dynatrace problem demo](docs/resolve_problem.md)
+- [Datadog + EDA integration](docs/datadog_eda_integration.md)

@@ -31,6 +31,8 @@ The workflow and job templates associated with the remediation are in two extern
 4. **Event-Driven Ansible** receives the payload as an event. The rulebook in [`rulebooks/datadog_event_stream.yml`](../rulebooks/datadog_event_stream.yml) evaluates its rules' conditions against `event.payload`.
 5. When a condition matches, the rule's action launches an AAP **job template** or **workflow template** to remediate the issue — optionally creating/updating a ServiceNow incident along the way, and closing the loop once resolved.
 
+![DataDog EDA Integration](.attachments/datadog_eda.lemma.png)
+
 ## Tech Stack
 
 - Datadog (Agent + Monitors + Webhooks integration)

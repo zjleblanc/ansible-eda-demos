@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-08-25 — Add Datadog OAuth2 JWT event stream guide
+
+### Added
+- New guide `docs/datadog_eda_integration_oauth.md` covering Datadog Event Streams using the OAuth2 JWT credential type, with Okta as the worked Identity Provider example
+- Okta Authorization Server, EDA credential/event stream, and Datadog OAuth2 webhook configuration steps, plus a testing/validation and troubleshooting section
+
 ## 2026-08-20 — Update Dynatrace EDA demo to support OpenFlake
 
 ### Added

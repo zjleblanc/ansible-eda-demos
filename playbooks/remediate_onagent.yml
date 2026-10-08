@@ -44,6 +44,7 @@
       delegate_to: "{{ _host }}"
       register: r_journal
       ansible.builtin.command: journalctl -u oneagent
+      changed_when: false
 
     - name: Post logs to incident
       ansible.builtin.include_tasks:

@@ -1,6 +1,6 @@
 ---
-- hosts: "{{ _hosts | default(omit) }}"
-  name: Update demo site
+- name: Update demo site
+  hosts: "{{ _hosts | default(omit) }}"
   become: true
 
   vars:

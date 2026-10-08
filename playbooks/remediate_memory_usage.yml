@@ -1,6 +1,6 @@
 ---
-- hosts: "{{ _host | default(omit) }}"
-  name: Remediate high memory utilization
+- name: Remediate high memory utilization
+  hosts: "{{ _host | default(omit) }}"
   become: true
   gather_facts: false
 

@@ -6,8 +6,7 @@ authors:
   - Zach LeBlanc
 
 description: >-
-  Event-Driven Ansible source plugins maintained by zjleblanc, including a
-  Datadog Events API polling plugin (dd_poll).
+  Event-Driven Ansible collection maintained by zjleblanc.
 
 license:
   - GPL-2.0-or-later

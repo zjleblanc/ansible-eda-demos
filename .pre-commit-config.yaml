@@ -17,7 +17,7 @@ repos:
     rev: v24.10.0
     hooks:
       - id: ansible-lint
-        # Run ansible-lint on the whole repo
+        # Run ansible-lint on the whole repo when YAML changes
         entry: ansible-lint
         pass_filenames: false
-        always_run: true
+        files: \.(yaml|yml|py)$

@@ -1,0 +1,76 @@
+name: Collection Release
+
+# Automatically bumps the zjleblanc.eda collection version, builds it, and
+# publishes it to Ansible Galaxy whenever a change under
+# collections/zjleblanc/eda/ is pushed to main.
+#
+# See docs/collection_release_pipeline.md for full details on the commit
+# message convention and required secrets.
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "collections/zjleblanc/eda/**"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: collection-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    # The version-bump commit created below includes [skip ci] so this
+    # workflow does not trigger itself in an infinite loop.
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install "ansible-core>=2.16"
+
+      - name: Determine version bump
+        id: bump
+        env:
+          COLLECTION_PATH: collections/zjleblanc/eda
+        run: python .github/scripts/bump_collection_version.py
+
+      - name: Build collection
+        if: steps.bump.outputs.new_version != ''
+        run: >-
+          ansible-galaxy collection build collections/zjleblanc/eda
+          --output-path ./build/ --force
+
+      - name: Publish to Ansible Galaxy
+        if: steps.bump.outputs.new_version != ''
+        env:
+          GALAXY_API_TOKEN: ${{ secrets.GALAXY_API_TOKEN }}
+        run: >-
+          ansible-galaxy collection publish
+          ./build/zjleblanc-eda-${{ steps.bump.outputs.new_version }}.tar.gz
+          --api-key "${GALAXY_API_TOKEN}"
+
+      - name: Commit version bump and tag
+        if: steps.bump.outputs.new_version != ''
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add collections/zjleblanc/eda/galaxy.yml
+          git commit -m "chore(eda): release v${{ steps.bump.outputs.new_version }} [skip ci]"
+          git tag "collection-v${{ steps.bump.outputs.new_version }}"
+          git push origin HEAD:${{ github.ref_name }}
+          git push origin "collection-v${{ steps.bump.outputs.new_version }}"

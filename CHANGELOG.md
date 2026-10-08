@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-10-08 — Add automated collection semver release pipeline
+
+### Added
+- GitHub Actions workflow `.github/workflows/collection-release.yml` that bumps, builds, and publishes the `zjleblanc.eda` collection to Ansible Galaxy on pushes to `main` that touch `collections/zjleblanc/eda/`
+- Version-bump script `.github/scripts/bump_collection_version.py` implementing commit-prefix-based semver (`major:`/`minor:`/`patch:`, with `feat:`/`fix:` accepted as aliases)
+- Guide `docs/collection_release_pipeline.md` covering the pipeline flow, commit message convention, and required `GALAXY_API_TOKEN` secret setup
+
+### Changed
+- Added a "Versioning" section to `collections/zjleblanc/eda/README.md` linking to the new release pipeline documentation
+
 ## 2026-10-08 — Add Datadog Events API polling integration
 
 ### Added

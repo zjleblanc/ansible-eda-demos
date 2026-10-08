@@ -1,7 +1,7 @@
 class FilterModule(object):
 
     def filters(self):
-        return { 
+        return {
             "codify": self.do_codify,
             "parse_top" : self.do_parse_top,
             "parse_lsof" : self.do_parse_lsof,
@@ -10,13 +10,13 @@ class FilterModule(object):
 
     def do_codify(self, content, endline='\n'):
         return '[code]<pre>' + content.replace(endline,'<br>') + '</pre>[/code]'
-    
+
     def do_num_gt(self, tasks: list, key: str, threshold: float) -> list:
         return list(filter(lambda t: float(t[key]) > threshold, tasks))
-    
+
     def do_parse_lsof(self, lsof_raw: list) -> list:
-        return self.__parse_lsof_records(lsof_raw)    
-    
+        return self.__parse_lsof_records(lsof_raw)
+
     def do_parse_top(self, top_raw: list) -> dict:
         parsed = {"meta": {}, "tasks": []}
         idx = 0
@@ -38,7 +38,7 @@ class FilterModule(object):
 
         parsed["tasks"] = self.__parse_task_data(top_raw[idx:])
         return parsed
-    
+
     # Private helper functions #
     @staticmethod
     def __parse_meta_line(line: str, type: type) -> dict:
@@ -66,7 +66,7 @@ class FilterModule(object):
                 data[keys[idx]] = values[idx]
             parsed.append(data)
         return parsed
-    
+
     @staticmethod
     def __parse_lsof_records(lines: list) -> dict:
         parsed = []

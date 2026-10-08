@@ -14,7 +14,7 @@ repos:
       - id: gitleaks
 
   - repo: https://github.com/ansible/ansible-lint
-    rev: v24.10.0
+    rev: v26.9.0
     hooks:
       - id: ansible-lint
         # Run ansible-lint on the whole repo when YAML changes

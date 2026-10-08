@@ -21,7 +21,7 @@ Dynatrace is an agent-based solution. For this demo, I leverage a launch templat
 ### Create EC2 Launch Template
 
 AWS Housekeeping
--  Create an AWS keypair for the machine you will use to conduct this demo. To simulate a "full disk", you will want to be able to quickly SSH and run a command. 
+-  Create an AWS keypair for the machine you will use to conduct this demo. To simulate a "full disk", you will want to be able to quickly SSH and run a command.
 -  Create a VPC with a public subnet - keep the architecture simple
 -  Ensure the Security Group associated with your public subnet allows
    -  SSH traffic (TCP/22)
@@ -56,7 +56,7 @@ Now you can **Create the Launch Template**
 
 ### Create EC2 Instance
 
-Now we need to create an EC2 instance using the launch template. The benefit of a template is you only have to create it once, then you can spin up demo VMs with Dynatrace monitoring in minutes. 
+Now we need to create an EC2 instance using the launch template. The benefit of a template is you only have to create it once, then you can spin up demo VMs with Dynatrace monitoring in minutes.
 
 Navigate to Instances > Launch Instances ^ > Launch instance from template
 
@@ -245,4 +245,4 @@ fallocate -l 4G dummy.txt
 df -h | grep -E /$
 ```
 
-Now you should be able to observe the end-to-end automated remediation process. Dynatrace will take time to generate a problem because it evaluates metrics in a sliding window. EDA will (near) instantly pickup the problem and start remediating. Once remediation is complete, Dynatrace will have a delay in auto-closing the problem while it confirms the metric has returned to an acceptable level. 
+Now you should be able to observe the end-to-end automated remediation process. Dynatrace will take time to generate a problem because it evaluates metrics in a sliding window. EDA will (near) instantly pickup the problem and start remediating. Once remediation is complete, Dynatrace will have a delay in auto-closing the problem while it confirms the metric has returned to an acceptable level.

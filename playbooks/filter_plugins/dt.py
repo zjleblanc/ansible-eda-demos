@@ -6,10 +6,10 @@ class FilterModule(object):
             'codify': self.do_codify,
             'dt_problem_hosts': self.dt_problem_hosts
         }
-    
+
     def do_codify(self, content, endline='\n'):
         return '[code]<pre>' + content.replace(endline,'<br>') + '</pre>[/code]'
-    
+
     def dt_problem_hosts(self, problem):
         hosts = []
         evidence = problem.get('evidenceDetails', {})

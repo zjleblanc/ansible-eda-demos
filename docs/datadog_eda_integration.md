@@ -81,7 +81,7 @@ In the Datadog portal, navigate to **Monitors > New Monitor** and choose the mon
 In the monitor's notification message, add `@webhook-aap-eda` on its own line so Datadog fires the webhook whenever the monitor triggers (and, optionally, when it recovers):
 
 ```text
-@webhook-event_driven_ansible 
+@webhook-event_driven_ansible
 {{#is_alert}} Alert: Free disk space is below {{threshold}}% on {{host.name}}. {{/is_alert}}
 {{#is_warning}} Warning: Free disk space is below {{warn_threshold}}% on {{host.name}}. {{/is_warning}}
 Disk space available: {{value}}%

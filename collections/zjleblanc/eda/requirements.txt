@@ -1,0 +1,4 @@
+# Python dependencies required by this collection's EDA source plugins.
+# ansible-builder / ansible-rulebook automatically installs this file
+# alongside the collection when building a decision environment.
+aiohttp>=3.9.0

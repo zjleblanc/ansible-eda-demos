@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-10-08 — Add Datadog Events API polling integration
+
+### Added
+- New local collection `zjleblanc.eda` containing the `dd_poll` source plugin for polling the Datadog Events API v2 with Service Access Token authentication
+- Demo rulebook `rulebooks/datadog_event_poll.yml` illustrating the polling pattern without an inbound event stream
+- Comprehensive setup guide `docs/datadog_eda_polling_integration.md` for egress-only environments where AAP initiates the connection to Datadog
+
+### Changed
+- Updated `README.md` to document the new `collections/` directory and cross-link the polling use case
+- Refined `docs/datadog_eda_integration.md` to reference the polling alternative for environments that cannot allow inbound webhook traffic
+
 ## 2026-08-25 — Add Datadog OAuth2 JWT event stream guide
 
 ### Added

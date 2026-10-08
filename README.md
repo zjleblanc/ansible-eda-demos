@@ -21,6 +21,7 @@ Events from observability platforms and ITSMs flow into EDA rulebooks, which mat
 
 ```
 rulebooks/          EDA rulebooks (event sources, conditions, actions)
+collections/        Locally-maintained Ansible collections (e.g. zjleblanc.eda source plugins)
 playbooks/          Remediation and ITSM playbooks launched by rulebooks
   filter_plugins/   Custom Jinja filters (Dynatrace, ServiceNow helpers)
   tasks/            Shared task files (ServiceNow comments, attachments, state)
@@ -51,6 +52,8 @@ This approach had several drawbacks:
 - **Scaling limits** — each activation opened its own listener; there was no way to share a single inbound endpoint across multiple rulebook activations.
 
 Event streams solve all of these problems. Authentication is configured once in the EDA controller using event stream credentials (HMAC, Basic, Token, OAuth2, ECDSA). The raw webhook payload arrives directly at `event.payload`, so conditions are written against the vendor's native schema. A single event stream endpoint can feed multiple activations, and no vendor collection needs to be installed.
+
+Source plugins still have a place when the push/webhook model doesn't fit — specifically, when inbound traffic to AAP isn't allowed but AAP can reach the external system outbound. In that case, a *polling* source plugin running inside the rulebook activation initiates the connection to the external system itself (pull), instead of waiting for the external system to call AAP (push). See [`collections/zjleblanc/eda`](collections/zjleblanc/eda) and the [Datadog polling integration](docs/datadog_eda_polling_integration.md) for a current (non-legacy), security-hardened example that polls an API with a scoped, short-lived credential rather than binding a port or embedding a static secret.
 
 ### How event streams replace sources in a rulebook
 
@@ -110,4 +113,6 @@ ansible-rulebook --rulebook rulebooks/demo_webhook.yml -i inventory -S SOURCE_AR
 - [ServiceNow catalog integration](docs/service_now_eda_sc_req_items.md)
 - [Disk space remediation lab](docs/expand_disk_space.md)
 - [Resolve Dynatrace problem demo](docs/resolve_problem.md)
-- [Datadog + EDA integration](docs/datadog_eda_integration.md)
+- [Datadog + EDA integration (event stream)](docs/datadog_eda_integration.md)
+- [Datadog + EDA integration (OAuth2 JWT event stream)](docs/datadog_eda_integration_oauth.md)
+- [Datadog + EDA integration (polling source plugin)](docs/datadog_eda_polling_integration.md)

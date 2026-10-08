@@ -1,0 +1,31 @@
+namespace: zjleblanc
+name: eda
+version: 1.0.0
+readme: README.md
+authors:
+  - Zach LeBlanc
+
+description: >-
+  Event-Driven Ansible source plugins maintained by zjleblanc, including a
+  Datadog Events API polling plugin (dd_poll).
+
+license:
+  - GPL-2.0-or-later
+
+tags:
+  - eda
+  - event_driven_ansible
+  - datadog
+  - monitoring
+  - observability
+
+repository: https://github.com/zjleblanc/ansible-eda-demos
+documentation: https://github.com/zjleblanc/ansible-eda-demos/blob/main/docs/datadog_eda_polling_integration.md
+homepage: https://github.com/zjleblanc/ansible-eda-demos
+issues: https://github.com/zjleblanc/ansible-eda-demos/issues
+
+build_ignore:
+  - '*.tar.gz'
+
+### Other collections this one depends on. This collection has none.
+dependencies: {}

@@ -15,6 +15,8 @@ The worked example uses the same **free disk space** scenario as the [Dynatrace 
 
 For background on why Red Hat recommends this pattern, see the blog post [Automate actions from Datadog observability data](https://www.redhat.com/en/blog/automate-actions-datadog-observability-data).
 
+> This guide covers the **event stream** (push/webhook) pattern — Datadog initiates the connection to AAP, so AAP must be reachable *inbound*. This is the right default. If inbound traffic to AAP isn't allowed, but AAP can reach Datadog outbound, see the [polling source plugin alternative](datadog_eda_polling_integration.md) instead, where AAP initiates the connection to Datadog instead of the other way around — it uses a locally-maintained `zjleblanc.eda.dd_poll` plugin authenticated with a Datadog Service Access Token.
+
 ### Source Code
 
 - [Rulebook](../rulebooks/datadog_event_stream.yml)
@@ -244,6 +246,7 @@ The Datadog Agent will pick up the drop in free disk space on its next reporting
 ## References
 
 - [Rulebook: `rulebooks/datadog_event_stream.yml`](../rulebooks/datadog_event_stream.yml)
+- [Polling alternative: `docs/datadog_eda_polling_integration.md`](datadog_eda_polling_integration.md)
 - Red Hat blog: [Automate actions from Datadog observability data](https://www.redhat.com/en/blog/automate-actions-datadog-observability-data)
 - [Datadog Webhooks integration docs](https://docs.datadoghq.com/integrations/webhooks/)
 - [Datadog Monitors docs](https://docs.datadoghq.com/monitors/)

@@ -1,0 +1,42 @@
+### Polling pattern -- requires the zjleblanc.eda collection in the Decision Environment ###
+### See docs/datadog_eda_polling_integration.md for full setup instructions ###
+---
+- name: Poll DataDog Events API for Event-Driven Ansible
+  hosts: all
+
+  sources:
+    # the activation.
+    - name: DataDog Event Source
+      zjleblanc.eda.dd_poll:
+        interval: 15
+        lookback_minutes: 5
+
+  rules:
+    # Commands to generate mock disk consumption
+    # (linux)    fallocate -l 4G dummy.img
+    # (windows)  $file = [System.IO.File]::Create("C:\users\ec2-user\dummylarge.txt"); $file.SetLength(10GB); $file.Close();
+    - name: Launch Free Disk Space Remediation
+      condition: event.title is match("Free Disk Space Below", ignorecase=true)
+      throttle:
+        once_within: 30 minutes
+        group_by_attributes:
+          - event.hostname
+      action:
+        run_workflow_template:
+          name: EDA // Remediation Workflow // Disk Space
+          organization: Autodotes
+          job_args:
+            extra_vars:
+              _host: "{{ event.hostname }}"
+              _aws_region: "us-east-2"
+              inc_short_description: "{{ event.title }} [{{ event.hostname }}]"
+              inc_description: "Auto-generated event by Ansible for DataDog event {{ event.id }}"
+              inc_other:
+                comments: >
+                  [code] <p>Datadog event ID: {{ event.id }}</p> [/code]
+
+    - name: Catch 'em All
+      condition: event.id is defined
+      action:
+        debug:
+          msg: "{{ event }}"

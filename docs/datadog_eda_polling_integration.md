@@ -13,29 +13,12 @@ The [Datadog + EDA integration](datadog_eda_integration.md) in this repo uses th
 
 This guide covers that alternative: a **polling** source plugin, `zjleblanc.eda.dd_poll`, that runs inside the rulebook activation and **initiates the connection the other way** — AAP periodically calls out to the [Datadog Events API](https://docs.datadoghq.com/api/latest/events/) to pull new events. Datadog never needs to reach AAP; AAP only needs outbound HTTPS access to Datadog. Use this pattern specifically when inbound traffic to AAP isn't allowed but AAP can reach Datadog. It's a locally-maintained, security-hardened plugin, authenticating with a Datadog **Service Access Token** instead of a static API key / Application key pair.
 
-The worked example reuses the same **free disk space** scenario as the [event stream guide](datadog_eda_integration.md) and the [Dynatrace disk-space lab](expand_disk_space.md), so the downstream remediation workflow is identical — only how EDA learns about the alert differs.
-
 - [Source Code](#source-code)
 - [End-to-end flow](#end-to-end-flow)
-  - [Mermaid](#mermaid)
-  - [Lemma](#lemma)
 - [Tech Stack](#tech-stack)
 - [Setup](#setup)
-  - [Install and configure the Datadog Agent](#install-and-configure-the-datadog-agent)
-  - [Create a Datadog Service Account and Service Access Token](#create-a-datadog-service-account-and-service-access-token)
-  - [Create a Datadog Monitor](#create-a-datadog-monitor)
-  - [EDA Decision Environment](#eda-decision-environment)
-  - [EDA Project](#eda-project)
-  - [AAP Credential](#aap-credential)
-  - [EDA Rulebook Activation](#eda-rulebook-activation)
-  - [AAP Resources](#aap-resources)
 - [The rulebook explained](#the-rulebook-explained)
-- [Polling vs Event Stream](#polling-vs-event-stream)
 - [Triggering a test alert](#triggering-a-test-alert)
-  - [1. Requirements](#1-requirements)
-  - [2. Choose Your Endpoint Region](#2-choose-your-endpoint-region)
-  - [3. Send the Test Event via cURL](#3-send-the-test-event-via-curl)
-  - [4. Verify in Datadog](#4-verify-in-datadog)
 - [Troubleshooting](#troubleshooting)
 - [References](#references)
 
@@ -277,22 +260,6 @@ Unlike the event stream rulebook, the `sources` entry here is **not** a placehol
 ```
 
 **Catch 'em All** matches every polled event and dumps it via `debug`. It's useful while first wiring up the activation — enable it to confirm events are flowing (and see the full field set an event carries) before layering on real remediation rules, then disable or remove it once you're done.
-
-## Polling vs Event Stream
-
-Both patterns are available in this repo and can be run side by side against the same Datadog organization — pick based on your network and operational constraints:
-
-| Consideration | Event Stream ([`datadog_event_stream.yml`](../rulebooks/datadog_event_stream.yml)) | Polling ([`datadog_event_poll.yml`](../rulebooks/datadog_event_poll.yml)) |
-| --- | --- | --- |
-| Direction | **Push** — Datadog initiates: Datadog → AAP (inbound to AAP) | **Pull** — AAP initiates: AAP → Datadog (outbound from AAP) |
-| Network requirement | AAP must expose a reachable inbound endpoint to Datadog | AAP only needs outbound HTTPS access to the Datadog API; no inbound access to AAP required |
-| Decision environment | Default/built-in DE is sufficient | Requires a custom DE with `zjleblanc.eda` installed |
-| Event latency | Near-instant (push) | Up to one `interval` (poll) |
-| Event scope | Only what you wire into the webhook payload/Monitor notification | Any Datadog Event, including ones with no notification configured |
-| Authentication | Event stream credential (Basic/Token/HMAC/OAuth2) on the Datadog webhook side | Datadog Service Access Token on the AAP activation side |
-| Setup complexity | Lower (no custom DE) | Higher (custom DE, SAT, custom credential type) |
-
-See [`docs/datadog_eda_integration.md`](datadog_eda_integration.md) for the event stream walkthrough, and [`docs/datadog_eda_integration_oauth.md`](datadog_eda_integration_oauth.md) for an OAuth2/JWT-secured variant of that pattern.
 
 ## Triggering a test alert
 

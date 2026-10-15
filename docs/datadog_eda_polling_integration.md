@@ -225,7 +225,7 @@ The rulebook launches the same downstream automation described in the [disk spac
 
 [`rulebooks/datadog_event_poll.yml`](../rulebooks/datadog_event_poll.yml):
 
-```1:22:rulebooks/datadog_event_poll.yml
+```yaml
 ---
 - name: Poll DataDog Events API for Event-Driven Ansible
   hosts: all
@@ -240,7 +240,7 @@ The rulebook launches the same downstream automation described in the [disk spac
 
 Unlike the event stream rulebook, the `sources` entry here is **not** a placeholder — `zjleblanc.eda.dd_poll` is a real, running source plugin for both local testing and AAP activation. The Datadog bearer token is deliberately absent from the plugin arguments; it's read from the `DD_BEARER_TOKEN` environment variable injected by the AAP credential configured on the activation.
 
-```48:52:rulebooks/datadog_event_poll.yml
+```yaml
     - name: Catch 'em All
       condition: event.id is defined
       action:

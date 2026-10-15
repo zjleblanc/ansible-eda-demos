@@ -15,6 +15,30 @@ This guide covers that alternative: a **polling** source plugin, `zjleblanc.eda.
 
 The worked example reuses the same **free disk space** scenario as the [event stream guide](datadog_eda_integration.md) and the [Dynatrace disk-space lab](expand_disk_space.md), so the downstream remediation workflow is identical — only how EDA learns about the alert differs.
 
+- [Source Code](#source-code)
+- [End-to-end flow](#end-to-end-flow)
+  - [Mermaid](#mermaid)
+  - [Lemma](#lemma)
+- [Tech Stack](#tech-stack)
+- [Setup](#setup)
+  - [Install and configure the Datadog Agent](#install-and-configure-the-datadog-agent)
+  - [Create a Datadog Service Account and Service Access Token](#create-a-datadog-service-account-and-service-access-token)
+  - [Create a Datadog Monitor](#create-a-datadog-monitor)
+  - [EDA Decision Environment](#eda-decision-environment)
+  - [EDA Project](#eda-project)
+  - [AAP Credential](#aap-credential)
+  - [EDA Rulebook Activation](#eda-rulebook-activation)
+  - [AAP Resources](#aap-resources)
+- [The rulebook explained](#the-rulebook-explained)
+- [Polling vs Event Stream](#polling-vs-event-stream)
+- [Triggering a test alert](#triggering-a-test-alert)
+  - [1. Requirements](#1-requirements)
+  - [2. Choose Your Endpoint Region](#2-choose-your-endpoint-region)
+  - [3. Send the Test Event via cURL](#3-send-the-test-event-via-curl)
+  - [4. Verify in Datadog](#4-verify-in-datadog)
+- [Troubleshooting](#troubleshooting)
+- [References](#references)
+
 ### Source Code
 
 - [Rulebook](../rulebooks/datadog_event_poll.yml)
@@ -33,6 +57,7 @@ The workflow and job templates associated with the remediation are in two extern
 4. Each new event is put on the rulebook's event queue and evaluated against the rules in [`rulebooks/datadog_event_poll.yml`](../rulebooks/datadog_event_poll.yml) — conditions match directly against event fields (`event.title`, `event.hostname`, etc.), with no `event.payload` wrapper.
 5. When a condition matches, the rule's action launches an AAP **job template** or **workflow template** to remediate the issue — optionally creating/updating a ServiceNow incident along the way, and closing the loop once resolved.
 
+### Mermaid
 ```mermaid
 sequenceDiagram
     participant Agent as Datadog Agent
@@ -50,7 +75,7 @@ sequenceDiagram
     EDA->>EDA: Evaluate rule conditions against event
     EDA->>AAP: Launch job/workflow template
 ```
-
+### Lemma
 ![DataDog EDA Integration](.attachments/datadog_eda_poll.lemma.png)
 
 ## Tech Stack

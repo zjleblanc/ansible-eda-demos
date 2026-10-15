@@ -51,7 +51,7 @@ sequenceDiagram
     EDA->>AAP: Launch job/workflow template
 ```
 
-![DataDog EDA Integration](.attachments/datadog_replace)
+![DataDog EDA Integration](.attachments/datadog_eda_poll.lemma.png)
 
 ## Tech Stack
 

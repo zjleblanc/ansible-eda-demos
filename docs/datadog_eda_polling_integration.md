@@ -71,22 +71,28 @@ Install the [Datadog Agent](https://docs.datadoghq.com/agent/) on each host you 
 
 Datadog's current recommended authentication model for automation is a **Service Access Token (SAT)** tied to a **service account**, rather than a personal Application Key. SATs are scoped, support expiration policies, and remain valid independent of any individual user's access.
 
-1. In Datadog, go to **Organization Settings > Service Accounts** and click **New Service Account**. Give it a descriptive name, e.g. `eda-datadog-poll`.
+1. In Datadog, hover over your user icon and go to **Organization Settings > Service Accounts** and click **+ New Service Account**.
 
+    | Field | Value |
+    | --- | --- |
+    | Name | `eda-dd-poll-sa` |
+    | Email | `zach@example.com` |
+    | Roles | `DataDog Read Only Role` |
+   
    ![Create Datadog Service Account](.attachments/datadog_service_account_create.png)
 
-2. Open the new service account's details page, and under **Access Tokens**, click **New Token**.
+2. Open the new service account's details page, and under **Access Tokens**, click **+ New Token**.
 3. Configure the token:
 
     | Field | Value |
     | --- | --- |
-    | Name | `eda-dd-poll-sat` |
-    | Expiration Date | Per your rotation policy — `1 year` or `Custom` recommended over `Never` |
-    | Scopes | `events_read` (minimum required for this plugin; add only what you need) |
+    | Name | `eda-dd-poll-token` |
+    | Expiration Date | _Choose desired lifespan_ |
+    | Select Scopes | `events_read` (minimum req'd) |
 
    ![Create Datadog Service Access Token](.attachments/datadog_sat_create.png)
 
-4. Click **Create Token** and **copy the token value immediately** — it is only shown once and starts with the `ddsat_` prefix. Store it in a secrets manager; you'll paste it into an AAP credential in the [AAP Credential](#aap-credential) step below.
+4. Click on the new Service Account and **+ New Token** and **copy the token value immediately** — it is only shown once and starts with the `ddsat_` prefix. Store it in a secrets manager; you'll paste it into an AAP credential in the [AAP Credential](#aap-credential) step below.
 
 > This plugin also supports the legacy v1 Events API (static `api_key` + `app_key`) for environments that haven't migrated yet, but this is **deprecated** — Datadog has marked Application Keys as a legacy authentication method. Use the SAT approach above for any new integration.
 
@@ -230,39 +236,12 @@ The rulebook launches the same downstream automation described in the [disk spac
     # the activation.
     - name: DataDog Event Source
       zjleblanc.eda.dd_poll:
+        site: "{{ datadog_site }}" # Optional (view module docs - site defaults to api.datadoghq.com)
         interval: 15
         lookback_minutes: 5
 ```
 
 Unlike the event stream rulebook, the `sources` entry here is **not** a placeholder — `zjleblanc.eda.dd_poll` is a real, running source plugin for both local testing and AAP activation. The Datadog bearer token is deliberately absent from the plugin arguments; it's read from the `DD_BEARER_TOKEN` environment variable injected by the AAP credential configured on the activation.
-
-```24:46:rulebooks/datadog_event_poll.yml
-  rules:
-    # Commands to generate mock disk consumption
-    # (linux)    fallocate -l 4G dummy.img
-    # (windows)  $file = [System.IO.File]::Create("C:\users\ec2-user\dummylarge.txt"); $file.SetLength(10GB); $file.Close();
-    - name: Launch Free Disk Space Remediation
-      condition: event.title is match("Free Disk Space Below", ignorecase=true)
-      throttle:
-        once_within: 30 minutes
-        group_by_attributes:
-          - event.hostname
-      action:
-        run_workflow_template:
-          name: EDA // Remediation Workflow // Disk Space
-          organization: Autodotes
-          job_args:
-            extra_vars:
-              _host: "{{ event.hostname }}"
-              _aws_region: "us-east-2"
-              inc_short_description: "{{ event.title }} [{{ event.hostname }}]"
-              inc_description: "Auto-generated event by Ansible for DataDog event {{ event.id }}"
-              inc_other:
-                comments: >
-                  [code] <p>Datadog event ID: {{ event.id }}</p> [/code]
-```
-
-**Launch Free Disk Space Remediation** matches any event whose title contains "Free Disk Space Below" (case-insensitive). It's **throttled** to fire at most once every 30 minutes per hostname — important because a Monitor re-evaluating while still in an alert state can generate repeated events, and you don't want to launch the remediation workflow on every one. Note the field names: `event.title` and `event.hostname` are read directly off the event root (no `event.payload` wrapper), because `dd_poll` emits the flattened Datadog event object directly onto the queue.
 
 ```48:52:rulebooks/datadog_event_poll.yml
     - name: Catch 'em All
@@ -292,21 +271,40 @@ See [`docs/datadog_eda_integration.md`](datadog_eda_integration.md) for the even
 
 ## Triggering a test alert
 
-To exercise the disk-space example end-to-end, SSH to a monitored host and fill up disk space:
+### 1. Requirements
+Before sending the request, ensure you have your **Datadog API Key**:
+* Find or create your key by navigating to **Organization Settings > API Keys** in your Datadog dashboard.
+
+### 2. Choose Your Endpoint Region
+* **US1:** `https://datadoghq.com/api/v1/events`
+* **US3:** `https://us3.datadoghq.com/api/v1/events`
+* **US5:** `https://us5.datadoghq.com/api/v1/events`
+* **EU:** `https://datadoghq.eu`
+
+### 3. Send the Test Event via cURL
+Run the following `curl` command in your terminal, replacing `<YOUR_API_KEY>` with your actual Datadog key:
 
 ```bash
-# linux
-fallocate -l 4G dummy.img
+curl -X POST "https://<dd-region>/api/v1/events" \
+-H "Content-Type: application/json" \
+-H "DD-API-KEY: <YOUR_API_KEY>" \
+-d '{
+  "title": "Test Integration Alert Event",
+  "text": "This is a dummy event generated to test a 3rd-party integration polling mechanism.",
+  "priority": "normal",
+  "tags": [
+    "environment:test",
+    "integration:polling-test"
+  ],
+  "alert_type": "warning"
+}'
 ```
 
-```powershell
-# windows
-$file = [System.IO.File]::Create("C:\users\ec2-user\dummylarge.txt")
-$file.SetLength(10GB)
-$file.Close()
-```
+### 4. Verify in Datadog
+1. Open Datadog and navigate to the **Event Explorer**.
+2. Look for the title **"Test Integration Alert Event"**.
+3. Once visible, run your 3rd-party polling tool. The integration should successfully fetch this new event payload through its normal extraction cycle.
 
-The Datadog Agent will pick up the drop in free disk space on its next reporting interval, the Monitor will transition to Alert once its evaluation window confirms the threshold breach, and Datadog will record the Event — at which point `dd_poll`'s next poll (within `interval` seconds) should pick it up and launch the remediation workflow.
 
 ## Troubleshooting
 

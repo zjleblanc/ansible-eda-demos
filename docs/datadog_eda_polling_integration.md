@@ -226,24 +226,11 @@ The rulebook launches the same downstream automation described in the [disk spac
 [`rulebooks/datadog_event_poll.yml`](../rulebooks/datadog_event_poll.yml):
 
 ```1:22:rulebooks/datadog_event_poll.yml
-### Polling pattern -- requires the zjleblanc.eda collection in the Decision Environment ###
-### See docs/datadog_eda_polling_integration.md for full setup instructions ###
 ---
 - name: Poll DataDog Events API for Event-Driven Ansible
   hosts: all
 
   sources:
-    # Unlike the event-stream rulebooks in this repo, this source is NOT a
-    # placeholder -- the plugin itself polls the Datadog Events API from
-    # within the rulebook activation process. No Event Stream mapping is
-    # needed for this pattern.
-    #
-    # Authentication: the Datadog bearer token (a Service Access Token) is
-    # read from the DD_BEARER_TOKEN environment variable, which should be
-    # injected into the rulebook activation from an AAP credential -- it is
-    # intentionally not set as a plugin argument here. See
-    # docs/datadog_eda_polling_integration.md for how to configure this on
-    # the activation.
     - name: DataDog Event Source
       zjleblanc.eda.dd_poll:
         site: "{{ datadog_site }}" # Optional (view module docs - site defaults to api.datadoghq.com)

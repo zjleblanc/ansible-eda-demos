@@ -13,6 +13,8 @@ The [Datadog + EDA integration](datadog_eda_integration.md) in this repo uses th
 
 This guide covers that alternative: a **polling** source plugin, `zjleblanc.eda.dd_poll`, that runs inside the rulebook activation and **initiates the connection the other way** — AAP periodically calls out to the [Datadog Events API](https://docs.datadoghq.com/api/latest/events/) to pull new events. Datadog never needs to reach AAP; AAP only needs outbound HTTPS access to Datadog. Use this pattern specifically when inbound traffic to AAP isn't allowed but AAP can reach Datadog. It's a locally-maintained, security-hardened plugin, authenticating with a Datadog **Service Access Token** instead of a static API key / Application key pair.
 
+## Table of Contents
+
 - [Source Code](#source-code)
 - [End-to-end flow](#end-to-end-flow)
 - [Tech Stack](#tech-stack)
@@ -22,7 +24,7 @@ This guide covers that alternative: a **polling** source plugin, `zjleblanc.eda.
 - [Troubleshooting](#troubleshooting)
 - [References](#references)
 
-### Source Code
+## Source Code
 
 - [Rulebook](../rulebooks/datadog_event_poll.yml)
 - [`zjleblanc.eda` collection / `dd_poll` plugin source](../collections/zjleblanc/eda/extensions/eda/plugins/event_source/dd_poll.py)

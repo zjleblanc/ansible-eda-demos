@@ -1,0 +1,4 @@
+---
+- name: Use malformed jinja2 syntax
+  ansible.builtin.debug:
+    msg: "Environment is {{ app_env | default('prod') %}" # Incorrect closing delimiter

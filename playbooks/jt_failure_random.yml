@@ -11,6 +11,10 @@
       - linux_service_failure
       - linux_package_failure
       - api_unreachable
+      - undefined_variable
+      - malformed_jinja2
+      - bad_filter_plugin
+      - missing_facts
   environment:
     AWS_REGION: "{{ _aws_region }}"
   tasks:

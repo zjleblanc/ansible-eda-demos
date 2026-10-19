@@ -1,0 +1,4 @@
+---
+- name: Use non-existent filter plugin
+  ansible.builtin.set_fact:
+    transformed_data: "{{ [1, 2, 3] | custom.missing.obscure_transform }}"

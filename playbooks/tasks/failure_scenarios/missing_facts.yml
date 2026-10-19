@@ -1,0 +1,7 @@
+---
+- name: Reference gathered facts when gather_facts is false
+  ansible.builtin.debug:
+    msg:
+      - "Distribution: {{ ansible_facts.distribution }}"
+      - "Hostname: {{ ansible_facts.hostname }}"
+      - "Primary IP: {{ ansible_facts.default_ipv4.address }}"

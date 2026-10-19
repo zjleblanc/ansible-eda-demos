@@ -1,0 +1,4 @@
+---
+- name: Reference undefined database variable
+  ansible.builtin.debug:
+    msg: "Connecting to database at {{ database_endpoint }}"

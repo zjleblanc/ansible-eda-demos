@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-10-19 — Add synthetic failure scenarios for AI agent testing
+
+### Added
+- Four new failure scenario tasks in `playbooks/tasks/failure_scenarios/` for testing AI root-cause analysis:
+  - `undefined_variable.yml`: References a non-existent variable
+  - `malformed_jinja2.yml`: Contains invalid template syntax
+  - `bad_filter_plugin.yml`: References a non-existent filter plugin
+  - `missing_facts.yml`: References `ansible_facts` when `gather_facts: false` is set
+
+### Changed
+- Updated `playbooks/jt_failure_random.yml` to include the new scenarios in the random selection pool
+
 ## 2026-10-19 — Add AI agent failure notification and Red Hat branded template
 
 ### Added

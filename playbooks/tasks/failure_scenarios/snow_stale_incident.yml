@@ -1,0 +1,14 @@
+---
+- name: Query open incidents
+  register: r_incident_info
+  servicenow.itsm.incident_info:
+    query:
+      - active: true
+    limit: 5
+
+- name: Update a stale/deleted incident
+  servicenow.itsm.incident:
+    sys_id: "fab123deadbeef4567890abcdef01234" # Fabricated ID
+    state: in_progress
+    other:
+      comments: "Automated analysis starting for root cause determination."

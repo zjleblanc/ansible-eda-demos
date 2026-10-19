@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-19 — Add random failure generator playbook and scenarios
+
+### Added
+- New playbook `playbooks/random_failure.yml` that randomly selects one of five failure scenarios for AI root-cause analysis testing
+- Collection of genuine failure scenario tasks in `playbooks/tasks/failure_scenarios/` covering ServiceNow stale incidents, AWS missing instances, Linux service/package failures, and internal API timeouts
+
 ## 2026-10-08 — Add automated collection semver release pipeline
 
 ### Added

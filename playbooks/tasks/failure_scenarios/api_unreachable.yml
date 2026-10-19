@@ -1,0 +1,12 @@
+---
+- name: Verify external connectivity
+  ansible.builtin.uri:
+    url: https://www.google.com
+    method: GET
+    status_code: 200
+
+- name: Call unreachable internal API
+  ansible.builtin.uri:
+    url: https://api.autodotes.internal:8443/v1/healthcheck
+    method: GET
+    timeout: 5

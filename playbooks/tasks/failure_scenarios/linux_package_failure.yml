@@ -1,0 +1,11 @@
+---
+- name: Gather package facts
+  delegate_to: "{{ _target_host }}"
+  ansible.builtin.package_facts:
+
+- name: Install missing custom package
+  delegate_to: "{{ _target_host }}"
+  become: true
+  ansible.builtin.package:
+    name: autodotes-monitoring-agent
+    state: present

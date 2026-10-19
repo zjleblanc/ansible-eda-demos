@@ -1,0 +1,13 @@
+---
+- name: Describe instances in region
+  register: r_instance_info
+  amazon.aws.ec2_instance_info:
+    filters:
+      instance-state-name: ["running"]
+
+- name: Stop a stale/terminated instance
+  amazon.aws.ec2_instance:
+    instance_ids:
+      - "i-0abcd1234efgh5678" # Fabricated ID
+    state: stopped
+    wait: false

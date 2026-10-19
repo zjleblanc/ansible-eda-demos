@@ -1,0 +1,27 @@
+---
+- name: Random failure generator
+  hosts: localhost
+  gather_facts: false
+  vars:
+    _target_host: "{{ _target_host | default('localhost') }}"
+    _aws_region: "{{ _aws_region | default('us-east-2') }}"
+    _scenarios:
+      - snow_stale_incident
+      - aws_stale_instance
+      - linux_service_failure
+      - linux_package_failure
+      - api_unreachable
+  environment:
+    AWS_REGION: "{{ _aws_region }}"
+  tasks:
+    - name: Select failure scenario
+      ansible.builtin.set_fact:
+        _scenario: "{{ _force_scenario | default(_scenarios | random) }}"
+
+    - name: Display selected scenario
+      ansible.builtin.debug:
+        msg: "Executing scenario -- {{ _scenario }}"
+
+    - name: Execute scenario
+      ansible.builtin.include_tasks:
+        file: "tasks/failure_scenarios/{{ _scenario }}.yml"

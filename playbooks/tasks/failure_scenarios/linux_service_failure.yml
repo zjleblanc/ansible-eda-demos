@@ -1,0 +1,11 @@
+---
+- name: Gather service facts
+  delegate_to: "{{ _target_host }}"
+  ansible.builtin.service_facts:
+
+- name: Restart missing monitoring service
+  delegate_to: "{{ _target_host }}"
+  become: true
+  ansible.builtin.systemd:
+    name: autodotes-agent.service
+    state: restarted

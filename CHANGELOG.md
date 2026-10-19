@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-10-19 — Add AI agent failure notification and Red Hat branded template
+
+### Added
+- Playbook `playbooks/jt_failure_notification.yml` to receive AI agent failure analysis and send email notifications via `community.general.mail`
+- Red Hat branded HTML email template in `templates/ai_failure_notification.html.j2` following official corporate standards
+
+### Changed
+- Renamed `playbooks/random_failure.yml` to `playbooks/jt_failure_random.yml` for improved naming consistency
+
 ## 2026-10-19 — Add random failure generator playbook and scenarios
 
 ### Added

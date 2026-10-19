@@ -1,0 +1,51 @@
+---
+- name: Notify AI Agent Failure Analysis
+  hosts: localhost
+  gather_facts: false
+
+  vars:
+    # Required inputs from the AI Agent task
+    job_link: "{{ job_link | default('') }}"
+    project_link: "{{ project_link | default('') }}"
+    playbook_name: "{{ playbook_name | default('') }}"
+    failure_location: "{{ failure_location | default('') }}"
+    root_cause: "{{ root_cause | default('') }}"
+    suggested_fix: "{{ suggested_fix | default('') }}"
+    notification_recipients: "{{ notification_recipients | default([]) }}"
+
+    # SMTP Settings (injected via extra_vars)
+    smtp_server: "{{ email_smtp_server | default(MAILHOST) | default('') }}"
+    smtp_port: "{{ email_smtp_server_port | default(MAILHOST_PORT) | default(587) }}"
+    smtp_username: "{{ email_smtp_username | default(MAILHOST_USERNAME) | default('') }}"
+    smtp_password: "{{ email_smtp_password | default(MAILHOST_PASSWORD) | default('') }}"
+    smtp_from: "{{ email_smtp_from_address | default('aap-failure-bot@example.com') }}"
+
+  tasks:
+    - name: Validate required inputs
+      ansible.builtin.assert:
+        that:
+          - job_link != ""
+          - playbook_name != ""
+          - root_cause != ""
+          - notification_recipients | length > 0
+          - smtp_server != ""
+        fail_msg: "Missing required variables. Ensure AI Agent payload and SMTP credentials are provided."
+
+    - name: Debug AI Failure Analysis
+      ansible.builtin.debug:
+        msg:
+          - "Playbook: {{ playbook_name }}"
+          - "Location: {{ failure_location }}"
+          - "Root Cause: {{ root_cause }}"
+
+    - name: Send Failure Notification Email
+      community.general.mail:
+        host: "{{ smtp_server }}"
+        port: "{{ smtp_port }}"
+        username: "{{ smtp_username }}"
+        password: "{{ smtp_password }}"
+        to: "{{ notification_recipients }}"
+        from: "{{ smtp_from }}"
+        subject: "[AAP Failure] Analysis for {{ playbook_name }}"
+        subtype: html
+        body: "{{ lookup('ansible.builtin.template', '../templates/ai_failure_notification.html.j2') }}"

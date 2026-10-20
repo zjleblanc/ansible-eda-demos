@@ -3,8 +3,8 @@
   hosts: localhost
   gather_facts: false
   vars:
-    _target_host: "{{ _target_host | default('localhost') }}"
-    _aws_region: "{{ _aws_region | default('us-east-2') }}"
+    _target_host: "localhost"
+    _aws_region: "us-east-2"
     _scenarios:
       - snow_stale_incident
       - aws_stale_instance

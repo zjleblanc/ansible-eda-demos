@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-20 — Fix recursion errors in failure scenarios
+
+### Fixed
+- Fixed recursion errors in `playbooks/jt_failure_random.yml` and `playbooks/jt_failure_notification.yml` by removing self-referential variable definitions in `vars` blocks
+
 ## 2026-10-19 — Add synthetic failure scenarios for AI agent testing
 
 ### Added

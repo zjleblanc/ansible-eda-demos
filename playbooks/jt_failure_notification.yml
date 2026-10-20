@@ -5,13 +5,13 @@
 
   vars:
     # Required inputs from the AI Agent task
-    job_link: "{{ job_link | default('') }}"
-    project_link: "{{ project_link | default('') }}"
-    playbook_name: "{{ playbook_name | default('') }}"
-    failure_location: "{{ failure_location | default('') }}"
-    root_cause: "{{ root_cause | default('') }}"
-    suggested_fix: "{{ suggested_fix | default('') }}"
-    notification_recipients: "{{ notification_recipients | default([]) }}"
+    job_link: ""
+    project_link: ""
+    playbook_name: ""
+    failure_location: ""
+    root_cause: ""
+    suggested_fix: ""
+    notification_recipients: []
 
     # SMTP Settings (injected via extra_vars)
     smtp_server: "{{ email_smtp_server | default(MAILHOST) | default('') }}"

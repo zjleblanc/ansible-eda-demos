@@ -6,7 +6,7 @@
   vars:
     # Required inputs from the AI Agent task
     job_link: ""
-    repo_url: ""
+    playbook_url: ""
     playbook_path: ""
     task_path: ""
     root_cause: ""

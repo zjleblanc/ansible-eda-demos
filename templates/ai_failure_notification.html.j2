@@ -101,10 +101,10 @@
         </div>
 
         <div class="label">Playbook</div>
-        <div class="value">{{ playbook_name }}</div>
+        <div class="value">{{ playbook_path }}</div>
 
         <div class="label">Location of Failure</div>
-        <div class="value"><code>{{ failure_location }}</code></div>
+        <div class="value"><code>{{ task_path }}</code></div>
 
         <div class="analysis-box">
           <div class="label" style="color: #c9190b;">AI Root Cause Analysis</div>
@@ -116,7 +116,7 @@
 
         <div style="margin-top: 30px;">
           <a href="{{ job_link }}" class="button">View Failed Job</a>
-          <a href="{{ project_link }}" class="button-secondary">View Project</a>
+          <a href="{{ repo_url }}" class="button-secondary">View Project</a>
         </div>
       </div>
       

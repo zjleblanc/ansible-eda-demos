@@ -6,12 +6,12 @@
   vars:
     # Required inputs from the AI Agent task
     job_link: ""
-    project_link: ""
-    playbook_name: ""
-    failure_location: ""
+    repo_url: ""
+    playbook_path: ""
+    task_path: ""
     root_cause: ""
     suggested_fix: ""
-    notification_recipients: []
+    notification_recipients: [zleblanc@redhat.com]
 
     # SMTP Settings (injected via extra_vars)
     smtp_server: "{{ email_smtp_server | default(MAILHOST) | default('') }}"
@@ -25,7 +25,7 @@
       ansible.builtin.assert:
         that:
           - job_link != ""
-          - playbook_name != ""
+          - playbook_path != ""
           - root_cause != ""
           - notification_recipients | length > 0
           - smtp_server != ""
@@ -34,8 +34,8 @@
     - name: Debug AI Failure Analysis
       ansible.builtin.debug:
         msg:
-          - "Playbook: {{ playbook_name }}"
-          - "Location: {{ failure_location }}"
+          - "Playbook: {{ playbook_path }}"
+          - "Location: {{ task_path }}"
           - "Root Cause: {{ root_cause }}"
 
     - name: Send Failure Notification Email
@@ -46,6 +46,6 @@
         password: "{{ smtp_password }}"
         to: "{{ notification_recipients }}"
         from: "{{ smtp_from }}"
-        subject: "[AAP Failure] Analysis for {{ playbook_name }}"
+        subject: "[AAP Failure] Analysis for {{ playbook_path }}"
         subtype: html
         body: "{{ lookup('ansible.builtin.template', '../templates/ai_failure_notification.html.j2') }}"

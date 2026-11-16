@@ -4,14 +4,16 @@
   gather_facts: false
 
   vars:
+    # Unpack content from the AI Agent task
+    ujt_agent_content: "{{ ujt_content | from_json }}"
     # Required inputs from the AI Agent task
-    job_link: ""
-    playbook_url: ""
-    playbook_path: ""
-    task_path: ""
-    root_cause: ""
-    suggested_fix: ""
-    notification_recipients: [zleblanc@redhat.com]
+    job_link: "{{ ujt_agent_content.job_link }}"
+    playbook_url: "{{ ujt_agent_content.playbook_url }}"
+    playbook_path: "{{ ujt_agent_content.playbook_path }}"
+    task_path: "{{ ujt_agent_content.task_path }}"
+    root_cause: "{{ ujt_agent_content.root_cause }}"
+    suggested_fix: "{{ ujt_agent_content.suggested_fix }}"
+    notification_recipients: "{{ ujt_agent_content.notification_recipients | default(['zleblanc@redhat.com']) }}"
 
     # SMTP Settings (injected via extra_vars)
     smtp_server: "{{ email_smtp_server | default(MAILHOST) | default('') }}"

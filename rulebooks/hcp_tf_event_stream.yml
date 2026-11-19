@@ -1,0 +1,16 @@
+### Preferred method for AAP 2.5+ ###
+---
+- name: Integrate with HCP Terraform Workflow for Event-Driven Ansible
+  hosts: all
+
+  sources:
+    # will be replaced by Event Stream
+    - name: HCP Terraform Event Source
+      ansible.eda.generic: {}
+
+  rules:
+    - name: Catch 'em All
+      condition: 1 == 1
+      action:
+        debug:
+          msg: "{{ event.payload }}"
